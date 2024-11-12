@@ -20,6 +20,8 @@ import UserProfile from './screens/UserProfile';
 import Chats from './screens/Chats';
 import ChatScreen from './screens/ChatScreen';
 import { StatusBar } from 'expo-status-bar';
+import Pricing from './screens/Pricing';
+import Credits from './screens/Credits';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,8 +29,8 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-      <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }}/>
+        <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
         <Stack.Screen name="SelectInterest" component={SelectInterest} options={{ headerShown: false }}/>
@@ -42,6 +44,8 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="UserProfile" component={UserProfile} options={{ headerShown: false }}/>
         <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Pricing" component={Pricing} options={{ headerShown: false }}/>
+        <Stack.Screen name="Credit" component={Credits} options={{ headerShown: false }}/>
       </Stack.Navigator>
       <StatusBar backgroundColor='#fff'/>
     </NavigationContainer>

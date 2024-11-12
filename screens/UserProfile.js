@@ -4,112 +4,122 @@ import userProfileStore from '../stores/userProfileStore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { CameraIcon } from "react-native-heroicons/outline";
 import colors from "../components/colors";
-import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
+export default function UserProfile({ navigation }) { // Ensure navigation prop is received
+  const { userProfile } = userProfileStore(); // Access user profile from Zustand store
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-export default function UserProfile() {
-    const { userProfile } = userProfileStore(); // Access user profile from Zustand store
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
   
-    if (!userProfile) {
-      return (
-        <View style={styles.container}>
-          <Text>Loading...</Text>
-        </View>
-      );
-    }
+  const handleNavigateToChat = (user) => {
+    navigation.navigate('ChatScreen', { user, imageUrl: user.imgPath }); // Pass imgPath as imageUrl
+  };
   
-    const openImageModal = (image) => {
-      setSelectedImage(image);
-      setIsModalVisible(true);
-    };
   
-    const closeImageModal = () => {
-      setSelectedImage(null);
-      setIsModalVisible(false);
-    };
-  
+
+  if (!userProfile) {
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        {/* Profile Image */}
-        <View>
-          <Image source={userProfile.imgPath} style={styles.profileImage} />
-        </View>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.cameraButton}>
-            <CameraIcon size={hp(3.5)} color="white" strokeWidth={1.5} />
-          </TouchableOpacity>
-        </View>
-  
-        {/* Details Container */}
-        <View style={styles.detailsContainer}>
-          <View style={styles.bioContainer}>
-            <View style={styles.nameAgeContainer}>
-              <Text style={styles.nameText}>
-                {userProfile.name}, {userProfile.age}
-              </Text>
-              <TouchableOpacity style={styles.msgBtn}>
-                <Ionicons name="chatbox-ellipses-outline" size={24} color={colors.white}/>
-              </TouchableOpacity>
-            </View>
-  
-            {/* Hobbies */}
-            <View style={styles.hobbiesContainer}>
-              {userProfile.hobbies?.map((hobby, index) => (
-                <View key={index} style={styles.hobbyChip}>
-                  <Text style={styles.hobbyText}>{hobby}</Text>
-                </View>
-              ))}
-            </View>
-  
-            {/* Bio */}
-            <View>
-              <Text style={styles.bioHeader}>BIO</Text>
-              <Text style={styles.bioText}>{userProfile.bio}</Text>
-            </View>
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  const openImageModal = (image) => {
+    setSelectedImage(image);
+    setIsModalVisible(true);
+  };
+
+  const closeImageModal = () => {
+    setSelectedImage(null);
+    setIsModalVisible(false);
+  };
+
+  return (
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      {/* Profile Image */}
+      <View>
+        <Image source={userProfile.imgPath} style={styles.profileImage} />
+      </View>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.cameraButton}>
+          <CameraIcon size={hp(3.5)} color="white" strokeWidth={1.5} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Details Container */}
+      <View style={styles.detailsContainer}>
+        <View style={styles.bioContainer}>
+          <View style={styles.nameAgeContainer}>
+            <Text style={styles.nameText}>
+              {userProfile.name}, {userProfile.age}
+            </Text>
+            <TouchableOpacity
+              style={styles.msgBtn}
+              onPress={() => handleNavigateToChat(userProfile)} // Pass `userProfile` to the navigation function
+            >
+              <Ionicons name="chatbox-ellipses-outline" size={24} color={colors.white} />
+            </TouchableOpacity>
+
           </View>
-  
-          {/* Gallery */}
-          <View style={styles.gallery}>
-            {userProfile.gallery?.slice(0, 4).map((image, index) => (
-              <TouchableOpacity key={index} style={styles.galleryImageContainer} onPress={() => openImageModal(image)}>
-                <Image source={{ uri: image }} style={styles.galleryImage} />
-              </TouchableOpacity>
+
+          {/* Hobbies */}
+          <View style={styles.hobbiesContainer}>
+            {userProfile.hobbies?.map((hobby, index) => (
+              <View key={index} style={styles.hobbyChip}>
+                <Text style={styles.hobbyText}>{hobby}</Text>
+              </View>
             ))}
           </View>
-  
-          {/* Info Container */}
-          <View style={styles.infoContainer}>
-            <View style={styles.infoContainerRow}>
-                <View>
-                <Text style={styles.bioHeader}>Location</Text>
-                <Text style={styles.infoText}>{userProfile.location}</Text>
-                </View>
-    
-                <View>
-                    <Text style={styles.bioHeader}>Education</Text>
-                    <Text style={styles.infoText}>{userProfile.education}</Text>
-                </View>
-            </View>
-  
-            <Text style={styles.bioHeader}>Interests</Text>
-            <View style={styles.interestsContainer}>
-              {userProfile.interests?.map((interest, index) => (
-                <View key={index} style={styles.interestChip}>
-                  <Text style={styles.interestText}>{interest}</Text>
-                </View>
-              ))}
-            </View>
-  
+
+          {/* Bio */}
+          <View>
+            <Text style={styles.bioHeader}>BIO</Text>
+            <Text style={styles.bioText}>{userProfile.bio}</Text>
+          </View>
+        </View>
+
+        {/* Gallery */}
+        <View style={styles.gallery}>
+          {userProfile.gallery?.slice(0, 4).map((image, index) => (
+            <TouchableOpacity key={index} style={styles.galleryImageContainer} onPress={() => openImageModal(image)}>
+              <Image source={{ uri: image }} style={styles.galleryImage} />
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Info Container */}
+        <View style={styles.infoContainer}>
+          <View style={styles.infoContainerRow}>
             <View>
-              <Text style={styles.bioHeader}>Work Experience</Text>
-              <Text style={styles.infoText}>{userProfile.workExperience}</Text>
+              <Text style={styles.bioHeader}>Location</Text>
+              <Text style={styles.infoText}>{userProfile.location}</Text>
             </View>
 
-            {/* Social Media */}
-            <Text style={styles.sectionTitle}>Social Media</Text>
-            <View style={styles.hobbiesContainer}>
+            <View>
+              <Text style={styles.bioHeader}>Education</Text>
+              <Text style={styles.infoText}>{userProfile.education}</Text>
+            </View>
+          </View>
+
+          <Text style={styles.bioHeader}>Interests</Text>
+          <View style={styles.interestsContainer}>
+            {userProfile.interests?.map((interest, index) => (
+              <View key={index} style={styles.interestChip}>
+                <Text style={styles.interestText}>{interest}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View>
+            <Text style={styles.bioHeader}>Work Experience</Text>
+            <Text style={styles.infoText}>{userProfile.workExperience}</Text>
+          </View>
+
+          {/* Social Media */}
+          <Text style={styles.sectionTitle}>Social Media</Text>
+          <View style={styles.hobbiesContainer}>
             {userProfile.socialMedia?.map((social, index) => (
               <TouchableOpacity
                 key={index}
@@ -119,22 +129,25 @@ export default function UserProfile() {
                 <Text style={styles.hobbyText}>{social.platform}</Text>
               </TouchableOpacity>
             ))}
-            </View>
           </View>
         </View>
-  
-        {/* Image Preview Modal */}
-        <Modal visible={isModalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
-          <View style={styles.modalBackground}>
-            <TouchableOpacity style={styles.modalCloseButton} onPress={closeImageModal}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-            <Image source={{ uri: selectedImage }} style={styles.fullScreenImage} />
-          </View>
-        </Modal>
-      </ScrollView>
-    );
-  }
+      </View>
+
+      {/* Image Preview Modal */}
+      <Modal visible={isModalVisible} transparent={true} animationType="slide" onRequestClose={closeImageModal}>
+        <View style={styles.modalBackground}>
+          <TouchableOpacity style={styles.modalCloseButton} onPress={closeImageModal}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+          <Image source={{ uri: selectedImage }} style={styles.fullScreenImage} />
+        </View>
+      </Modal>
+    </ScrollView>
+  );
+}
+
+// The rest of your styles remain unchanged.
+
   
 
 const styles = StyleSheet.create({

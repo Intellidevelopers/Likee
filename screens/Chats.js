@@ -57,7 +57,7 @@ const Chats = ({ navigation }) => {
       </View>
 
       {/* Message List */}
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={styles.content}>
         {chatListMessages.map((message) => (
           <TouchableOpacity
             style={styles.messageItem}

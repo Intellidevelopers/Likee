@@ -1,15 +1,19 @@
 // Nearby.js
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../components/colors';
 import userProfileStore from '../stores/userProfileStore';
 import { nearbyUsers } from '../components/NearbyData'; // Import NearbyData
+import { BottomSheet } from '@rneui/themed';
+
 
 const Nearby = () => {
   const navigation = useNavigation();
   const setUserProfile = userProfileStore((state) => state.setUserProfile);
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
 
   const handleClick = (item) => {
     setUserProfile(item); // This will include name, age, bio, imgPath, etc.
@@ -30,7 +34,7 @@ const Nearby = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Nearby</Text>
-        <TouchableOpacity style={styles.boostButton}>
+        <TouchableOpacity style={styles.boostButton} onPress={() => setIsBottomSheetVisible(true)}>
           <Ionicons name="flash" size={20} color="white" />
           <Text style={styles.boostButtonText}>Boost Me</Text>
         </TouchableOpacity>
@@ -47,6 +51,25 @@ const Nearby = () => {
         contentContainerStyle={styles.profileList}
         style={styles.flatList}
       />
+
+      <BottomSheet
+        isVisible={isBottomSheetVisible}
+        onBackdropPress={() => setIsBottomSheetVisible(false)}
+      >
+        <View style={styles.bottomSheetContent}>
+          <Ionicons name="flash" size={40} color="black" />
+          <Text style={styles.bottomSheetHeader}>Get Extra Shows</Text>
+          <Text style={styles.bottomSheetText}>
+            Be seen by people and increase your chances of finding a match
+          </Text>
+          <TouchableOpacity style={styles.getMoreLikesButton} onPress={() => navigation.navigate('Credit')}>
+            <Text style={styles.getMoreLikesText}>Boost Your Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsBottomSheetVisible(false)}>
+            <Text style={styles.maybeLaterText}>Maybe Later</Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
@@ -56,7 +79,7 @@ export default Nearby;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.greyBackground,
+    backgroundColor: colors.background,
   },
   headerContainer: {
     flexDirection: 'row',
@@ -126,5 +149,40 @@ const styles = StyleSheet.create({
   flatList: {
     flex: 1,
     marginBottom: 30
+  },
+  bottomSheetContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    alignItems: 'center',
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+  },
+  bottomSheetHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+  },
+  bottomSheetText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  getMoreLikesButton: {
+    backgroundColor: '#000',
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginBottom: 10,
+    width: '100%',
+    alignItems: 'center'
+  },
+  getMoreLikesText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  maybeLaterText: {
+    color: '#000',
+    marginTop: 10,
   },
 });

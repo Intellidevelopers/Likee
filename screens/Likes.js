@@ -1,24 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons, FontAwesome, AntDesign } from '@expo/vector-icons';
+import { BottomSheet } from '@rneui/themed';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
 import colors from '../components/colors';
 
-const Likes = () => {
+const Likes = ({ navigation }) => {
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Your likes list</Text>
       <Text style={styles.subHeader}>
         The faster you like them back, the higher your chance of chatting and dating!
       </Text>
-      
+
       <View style={styles.tabContainer}>
-        <Text style={[styles.tab, styles.activeTab]}>All likes <Ionicons name='lock-closed' size={16}/></Text>
-        <Text style={styles.tab}>New likes <Ionicons name='lock-closed' size={16}/></Text>
-        <Text style={styles.tab}>Online <Ionicons name='lock-closed' size={16}/></Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Pricing')}>
+          <Text style={[styles.tab, styles.activeTab]}>All likes <Ionicons name='lock-closed' size={16} /></Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Pricing')}>
+          <Text style={styles.tab}>New likes <Ionicons name='lock-closed' size={16} /></Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Pricing')}>
+          <Text style={styles.tab}>Online <Ionicons name='lock-closed' size={16} /></Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.gridContainer}>
-        {/* Mock profiles */}
         {[1, 2, 3].map((item, index) => (
           <View key={index} style={styles.profileContainer}>
             <Image
@@ -27,17 +35,16 @@ const Likes = () => {
               blurRadius={30}
             />
             <View style={styles.iconContainer}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Pricing')}>
                 <Ionicons name="close" size={24} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Pricing')}>
                 <FontAwesome name="heart" size={24} color="black" />
               </TouchableOpacity>
             </View>
           </View>
         ))}
 
-        {/* Special Offer Card */}
         <View style={styles.offerCard}>
           <View style={styles.offerCardContent}>
             <View style={styles.offerCoin}>
@@ -51,23 +58,38 @@ const Likes = () => {
               Get shown to more people to get 4x more likes.
             </Text>
           </View>
-          <TouchableOpacity style={styles.revealButton}>
+          <TouchableOpacity style={styles.revealButton} onPress={() => setIsBottomSheetVisible(true)}>
             <Text style={styles.revealButtonText}>Activate</Text>
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.ReviewButton}>
+        <TouchableOpacity style={styles.ReviewButton} onPress={() => navigation.navigate('Pricing')}>
           <Text style={styles.reviewBtnText}>Reveal My Likes</Text>
         </TouchableOpacity>
       </ScrollView>
 
-        
-     
+      {/* Themed Bottom Sheet */}
+      <BottomSheet
+        isVisible={isBottomSheetVisible}
+        onBackdropPress={() => setIsBottomSheetVisible(false)}
+      >
+        <View style={styles.bottomSheetContent}>
+          <Ionicons name="flash" size={40} color="black" />
+          <Text style={styles.bottomSheetHeader}>Want to see more likes?</Text>
+          <Text style={styles.bottomSheetText}>
+            Get shown to more people, and you could get up to 11.4x more likes.
+          </Text>
+          <TouchableOpacity style={styles.getMoreLikesButton} onPress={() => navigation.navigate('Credit')}>
+            <Text style={styles.getMoreLikesText}>Get More Likes</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setIsBottomSheetVisible(false)}>
+            <Text style={styles.maybeLaterText}>Maybe Later</Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
     </View>
   );
 };
-
-export default Likes;
 
 const styles = StyleSheet.create({
   container: {
@@ -79,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 5,
-    marginTop: 40
+    marginTop: 40,
   },
   subHeader: {
     fontSize: 14,
@@ -108,7 +130,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    flex: 1
+    flex: 1,
   },
   profileContainer: {
     width: '48%',
@@ -129,7 +151,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10, //
+    borderBottomRightRadius: 10,
     overflow: 'hidden',
     padding: 5,
   },
@@ -150,54 +172,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     color: '#444',
-    marginTop: 30
+    marginTop: 30,
   },
   revealButton: {
     backgroundColor: '#000',
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 45,
-    marginTop: 'auto'
+    marginTop: 'auto',
   },
   revealButtonText: {
     color: '#fff',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-  },
-  navText: {
-    fontSize: 12,
-  },
-  offerIcon:{
-    borderRadius: 20,
-    backgroundColor: colors.input,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: '#ddd',
-    padding: 5
-  },
-  offerCoin:{
-    borderRadius: 15,
-    alignItems: 'center',
-    borderColor: '#000',
-    padding: 5,
-    flexDirection: 'row',
-    gap: 10,
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    alignSelf: 'flex-end',
-    marginBottom: 10
-  },
-  offerCoinText:{
-    fontSize: 12,
-    color: '#000',
-    fontWeight: 'bold',
-  },
-  ReviewButton:{
+  ReviewButton: {
     backgroundColor: '#000',
     borderRadius: 30,
     paddingVertical: 15,
@@ -206,10 +193,47 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
-  reviewBtnText:{
+  reviewBtnText: {
     fontSize: 16,
-    color: colors.white
-  }
+    color: colors.white,
+  },
+  bottomSheetContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    alignItems: 'center',
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+  },
+  bottomSheetHeader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 10,
+  },
+  bottomSheetText: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  getMoreLikesButton: {
+    backgroundColor: '#000',
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginBottom: 10,
+    width: '100%',
+    alignItems: 'center'
+  },
+  getMoreLikesText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  maybeLaterText: {
+    color: '#000',
+    marginTop: 10,
+  },
 });
+
+export default Likes;

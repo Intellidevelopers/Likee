@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, ScrollView } from 'react-native';
 import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
+import { Audio } from 'expo-av'; // Import from Expo AV for audio recording
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import useChatStore from '../stores/useChatStore'; // Import the Zustand store
 import colors from '../components/colors';
@@ -8,15 +9,19 @@ import colors from '../components/colors';
 const ChatScreen = ({ navigation }) => {
   const [message, setMessage] = useState('');
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [soundWaveAnimation] = useState(new Animated.Value(1));
+  const [recordedUri, setRecordedUri] = useState(null);
+  const recordingRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false); // Track the playing state of the audio
+  const soundRef = useRef(new Audio.Sound()); 
 
-  // Get the selected user and messages from Zustand store
   const selectedUser = useChatStore(state => state.selectedUser);
   const messages = useChatStore(state => state.messages);
 
-  // Filter messages for the selected user
+  // Filter messages for the selected user including replies
   const filteredMessages = messages.filter(msg => msg.name === selectedUser?.name);
 
-  // Ensure selectedUser exists
   useEffect(() => {
     if (selectedUser) {
       console.log('Selected user:', selectedUser);
@@ -24,8 +29,8 @@ const ChatScreen = ({ navigation }) => {
   }, [selectedUser]);
 
   const addMessage = useChatStore(state => state.addMessage);
+  
 
-  // Initialize animated values for each message
   const animatedValues = useRef(filteredMessages.reduce((acc, msg) => {
     acc[msg.id] = new Animated.Value(0);
     return acc;
@@ -35,17 +40,22 @@ const ChatScreen = ({ navigation }) => {
     setSelectedMessage(message);
   };
 
-  const onGestureEvent = (id) => Animated.event(
-    [{ nativeEvent: { translationX: animatedValues[id] } }],
-    { useNativeDriver: true }
-  );
+  const onGestureEvent = (id) => {
+    if (!animatedValues[id]) {
+      animatedValues[id] = new Animated.Value(0); // Ensure it's initialized
+    }
+  
+    return Animated.event(
+      [{ nativeEvent: { translationX: animatedValues[id] } }],
+      { useNativeDriver: true }
+    );
+  };
 
   const onHandlerStateChange = (event, message) => {
     if (event.nativeEvent.state === State.END) {
       if (event.nativeEvent.translationX > 150) {
         handleReply(message);
       }
-      // Reset animation after swipe
       Animated.spring(animatedValues[message.id], {
         toValue: 0,
         useNativeDriver: true,
@@ -53,6 +63,38 @@ const ChatScreen = ({ navigation }) => {
     }
   };
 
+  const handlePlayPause = async (item) => {
+    if (isPlaying) {
+      // Pause the audio if it's playing
+      await soundRef.current.pauseAsync();
+      setIsPlaying(false);
+    } else {
+      try {
+        // Unload the previous sound if it's already loaded
+        await soundRef.current.unloadAsync();
+  
+        // Load the new audio
+        await soundRef.current.loadAsync({ uri: item.audioUri });
+  
+        // Set up playback status update
+        soundRef.current.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && status.didJustFinish) {
+            // If playback is finished, update the play state to false
+            setIsPlaying(false);
+          }
+        });
+  
+        // Play the audio
+        await soundRef.current.playAsync();
+        setIsPlaying(true);
+      } catch (err) {
+        console.error('Error playing audio', err);
+      }
+    }
+  };
+  
+  
+  
   const renderMessage = (item) => (
     <PanGestureHandler
       onGestureEvent={onGestureEvent(item.id)}
@@ -74,15 +116,25 @@ const ChatScreen = ({ navigation }) => {
         <View style={styles.messageContent}>
           {item.repliedTo && (
             <View style={styles.repliedMessageContainer}>
-              <Text style={styles.repliedMessageText}>Replying to: <Text style={{
-                color: '#555',
-                marginLeft: 5,
-                marginBottom: 5,
-                fontWeight: '400'
-              }}>{item.repliedMessage}</Text></Text>
+              <Text style={styles.repliedMessageText}>
+                Replying to: <Text style={{ color: '#555', marginLeft: 5, marginBottom: 5, fontWeight: '400' }}>{item.repliedMessage}</Text>
+              </Text>
             </View>
           )}
-          <Text style={styles.messageText}>{item.message}</Text>
+          {item.type === 'audio' ? (
+            <TouchableOpacity onPress={() => handlePlayPause(item)}>
+              <View style={styles.audioMessageContainer}>
+                <Ionicons
+                  name={isPlaying ? 'pause-circle' : 'play-circle'}
+                  size={30}
+                  color="#1E90FF"
+                />
+                <Text style={styles.audioMessage}>{isPlaying ? 'Pause' : 'Play'} Voice Message</Text>
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <Text style={styles.messageText}>{item.message}</Text>
+          )}
           <View style={styles.messageFooter}>
             <Text style={styles.messageTime}>{item.time}</Text>
             {item.isUser && (
@@ -98,6 +150,8 @@ const ChatScreen = ({ navigation }) => {
       </Animated.View>
     </PanGestureHandler>
   );
+  
+  
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -108,17 +162,121 @@ const ChatScreen = ({ navigation }) => {
         time: new Date().toLocaleTimeString(),
         isUser: true,
         read: false,
-        repliedTo: selectedMessage?.id || null, // Attach reply if applicable
-        repliedMessage: selectedMessage ? selectedMessage.message : null, // Store the reply content
-        name: selectedUser?.name, // Attach the message to the selected user's chat
+        repliedTo: selectedMessage?.id || null,
+        repliedMessage: selectedMessage ? selectedMessage.message : null,
+        name: selectedUser?.name,
       };
 
-      // Use Zustand's addMessage method to add the message
       addMessage(newMessage);
       setMessage('');
-      setSelectedMessage(null); // Clear the selected message after sending the reply
+      setSelectedMessage(null);
     }
   };
+
+  const startRecording = async () => {
+    try {
+      console.log('Requesting permissions...');
+      const permission = await Audio.requestPermissionsAsync();
+      if (permission.status !== 'granted') {
+        console.log('Permission to access microphone is required.');
+        return;
+      }
+
+      console.log('Starting recording...');
+      setIsRecording(true);
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(soundWaveAnimation, { toValue: 1.5, duration: 500, useNativeDriver: true }),
+          Animated.timing(soundWaveAnimation, { toValue: 1, duration: 500, useNativeDriver: true }),
+        ])
+      ).start();
+
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      recordingRef.current = recording;
+    } catch (err) {
+      console.error('Failed to start recording', err);
+    }
+  };
+
+  const stopRecording = async () => {
+    console.log('Stopping recording...');
+    setIsRecording(false);
+    Animated.timing(soundWaveAnimation).stop();
+    if (recordingRef.current) {
+      await recordingRef.current.stopAndUnloadAsync();
+      const uri = recordingRef.current.getURI();
+      console.log('Recording completed and stored at', uri);
+      setRecordedUri(uri);
+    }
+  };
+
+  const handleMicPress = async () => {
+    if (isRecording) {
+      // Stop recording and send the audio message
+      try {
+        setIsRecording(false);
+        Animated.timing(soundWaveAnimation).stop();
+        if (recordingRef.current) {
+          await recordingRef.current.stopAndUnloadAsync();
+          const uri = recordingRef.current.getURI();
+          console.log('Recording completed and stored at', uri);
+          setRecordedUri(uri);
+  
+          // Add the recorded audio to the chat
+          if (uri) {
+            const newAudioMessage = {
+              id: (messages.length + 1).toString(),
+              sender: 'You',
+              message: null, // No text, only audio
+              audioUri: uri, // Store the audio URI
+              time: new Date().toLocaleTimeString(),
+              isUser: true,
+              read: false,
+              repliedTo: selectedMessage?.id || null,
+              repliedMessage: selectedMessage ? selectedMessage.message : null,
+              name: selectedUser?.name,
+              type: 'audio', // Indicate that this is an audio message
+            };
+  
+            // Add the new message to the chat store
+            addMessage(newAudioMessage);
+            setSelectedMessage(null);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to stop recording', err);
+      }
+    } else {
+      // Start recording
+      try {
+        console.log('Requesting permissions...');
+        const permission = await Audio.requestPermissionsAsync();
+        if (permission.status !== 'granted') {
+          console.log('Permission to access microphone is required.');
+          return;
+        }
+  
+        console.log('Starting recording...');
+        setIsRecording(true);
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(soundWaveAnimation, { toValue: 1.5, duration: 500, useNativeDriver: true }),
+            Animated.timing(soundWaveAnimation, { toValue: 1, duration: 500, useNativeDriver: true }),
+          ])
+        ).start();
+  
+        const { recording } = await Audio.Recording.createAsync(
+          Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+        );
+        recordingRef.current = recording;
+      } catch (err) {
+        console.error('Failed to start recording', err);
+      }
+    }
+  };
+  
   
 
   return (
@@ -164,8 +322,12 @@ const ChatScreen = ({ navigation }) => {
           onChangeText={setMessage}
           onSubmitEditing={handleSendMessage}
         />
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="mic-outline" size={24} color="#555" />
+        <TouchableOpacity style={styles.iconButton} onPress={handleMicPress}>
+          <Ionicons
+            name={isRecording ? 'stop-circle-outline' : 'mic-outline'}
+            size={24}
+            color={isRecording ? 'red' : '#555'}
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton}>
           <Ionicons name="image-outline" size={24} color="#555" />
@@ -179,6 +341,7 @@ const ChatScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  // Your existing styles
   container: {
     flex: 1,
     backgroundColor: colors.grey,
@@ -271,9 +434,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   repliedMessageText: {
-    color: colors.success,
-    fontStyle: 'italic',
-    fontWeight: '700'
+    color: colors.deepDeem,
+    fontWeight: '400'
   },
   replyContainer: {
     backgroundColor: colors.label,
@@ -311,6 +473,16 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: 10,
     borderRadius: 30,
+  },
+  audioMessageContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  audioMessage: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: '#1E90FF',
   },
 });
 

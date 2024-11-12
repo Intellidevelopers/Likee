@@ -6,6 +6,7 @@ import colors from '../components/colors';
 
 const IdealMatch = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState(null); // State to track selected option
+  
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -101,10 +102,7 @@ const IdealMatch = ({ navigation }) => {
               text1: `You selected ${selectedOption}`,
             });
             // Navigate to a new screen
-            navigation.navigate({
-              pathname: '/(tabs)', // Update with your screen route
-              params: { selectedOption },
-            });
+            navigation.navigate('Main');
           }
         }}
       >

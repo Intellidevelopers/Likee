@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 20,
-    backgroundColor: colors.greyBackground,
+    backgroundColor: colors.background,
   },
   header: {
     fontSize: 24,

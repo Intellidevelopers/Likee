@@ -2,67 +2,81 @@ import { create } from 'zustand';
 
 const useChatStore = create((set, get) => ({
   messages: [
-    { 
-      id: '1', 
-      time: '05:30 PM', 
-      status: 'online', 
-      name: 'Adebukola', 
-      message: 'Good morning dear', 
+    {
+      id: '1',
+      time: '05:30 PM',
+      status: 'online',
+      name: 'Adebukola',
+      message: 'Good morning dear',
       imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
-      repliedTo: null, // No reply yet
+      isUser: false,
+      repliedTo: null,
+      type: 'text', // Message type
+      timestamp: Date.now(),
     },
-    { 
-      id: '2', 
-      time: '05:30 PM', 
-      status: 'online', 
-      name: 'Roseline Mercy', 
-      message: 'How was your night?', 
+    {
+      id: '2',
+      time: '05:30 PM',
+      status: 'online',
+      name: 'Roseline Mercy',
+      message: 'How was your night?',
       imageUrl: 'https://randomuser.me/api/portraits/women/10.jpg',
-      repliedTo: null, // No reply yet
+      isUser: false,
+      repliedTo: null,
+      type: 'text',
+      timestamp: Date.now(),
     },
-    { 
-      id: '3', 
-      time: '05:30 PM', 
-      status: 'online', 
-      name: 'Adenike Taiwo', 
-      message: 'Ok', 
+    {
+      id: '3',
+      time: '05:30 PM',
+      status: 'online',
+      name: 'Adenike Taiwo',
+      message: 'Ok',
       imageUrl: 'https://randomuser.me/api/portraits/women/1.jpg',
-      repliedTo: null, // No reply yet
+      isUser: false,
+      repliedTo: null,
+      type: 'text',
+      timestamp: Date.now(),
     },
-    // More messages...
+    // More messages can be added here
   ],
-  selectedMessage: null, // For the selected message
-  selectedUser: null, // For the selected user details
+  selectedMessage: null,
+  selectedUser: null,
 
-  // Set the selected message
   setSelectedMessage: (message) => set({ selectedMessage: message }),
-
-  // Set the selected user
   setSelectedUser: (user) => set({ selectedUser: user }),
 
-  // Add a new message (including replies)
-  addMessage: (newMessage) => set((state) => ({
-    messages: [...state.messages, newMessage],
-  })),
+  addMessage: (newMessage) => {
+    const existingUserMessage = get().messages.find(msg => msg.name === newMessage.name);
 
-  // Get all messages that do not have a reply (e.g., only "original" messages)
-  getChatListMessages: () => {
-    const state = get(); // Access the current store state
-    return state.messages.filter(message => message.repliedTo === null);
+    set((state) => ({
+      messages: [
+        ...state.messages,
+        {
+          ...newMessage,
+          imageUrl: existingUserMessage ? existingUserMessage.imageUrl : newMessage.imageUrl,
+        },
+      ],
+    }));
   },
 
-  // Get messages of a selected user, including replies
+  getChatListMessages: () => {
+    const state = get();
+    const userMessagesMap = {};
+  
+    state.messages.forEach((message) => {
+      userMessagesMap[message.name] = message;
+    });
+  
+    // Get messages as an array and sort by timestamp
+    return Object.values(userMessagesMap).sort((a, b) => b.timestamp - a.timestamp);
+  },
+  
+
   getUserMessages: (userName) => {
-    const state = get(); // Access the current store state
+    const state = get();
     return state.messages.filter(msg => msg.name === userName);
   },
-
-  // Get all messages for a specific user without replies (if you only want to show non-replied messages)
-  getUserMessagesWithoutReplies: (userName) => {
-    const state = get(); // Access the current store state
-    return state.messages.filter(msg => msg.name === userName && msg.repliedTo === null);
-  },
-
 }));
 
 export default useChatStore;
