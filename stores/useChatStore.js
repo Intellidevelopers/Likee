@@ -11,8 +11,8 @@ const useChatStore = create((set, get) => ({
       imageUrl: 'https://randomuser.me/api/portraits/women/9.jpg',
       isUser: false,
       repliedTo: null,
-      type: 'text', // Message type
-      timestamp: Date.now(),
+      type: 'text',
+      timestamp: Date.now() - 10000,
     },
     {
       id: '2',
@@ -24,7 +24,7 @@ const useChatStore = create((set, get) => ({
       isUser: false,
       repliedTo: null,
       type: 'text',
-      timestamp: Date.now(),
+      timestamp: Date.now() - 5000,
     },
     {
       id: '3',
@@ -55,23 +55,27 @@ const useChatStore = create((set, get) => ({
         {
           ...newMessage,
           imageUrl: existingUserMessage ? existingUserMessage.imageUrl : newMessage.imageUrl,
+          timestamp: Date.now(),
         },
       ],
     }));
   },
 
+  // Updated function to get the latest message per user, sorted by timestamp
   getChatListMessages: () => {
     const state = get();
     const userMessagesMap = {};
-  
+
+    // Keep the most recent message for each user
     state.messages.forEach((message) => {
-      userMessagesMap[message.name] = message;
+      if (!userMessagesMap[message.name] || userMessagesMap[message.name].timestamp < message.timestamp) {
+        userMessagesMap[message.name] = message;
+      }
     });
-  
-    // Get messages as an array and sort by timestamp
+
+    // Sort messages by timestamp (descending)
     return Object.values(userMessagesMap).sort((a, b) => b.timestamp - a.timestamp);
   },
-  
 
   getUserMessages: (userName) => {
     const state = get();

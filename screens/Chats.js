@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome, SimpleLineIcons, Octicons } from '@expo/vector-icons';
 import useChatStore from '../stores/useChatStore';
+import { sendPushNotification } from '../utils/notifications';  // Assuming this is the function to send notifications
 
 const Chats = ({ navigation }) => {
   const { setSelectedMessage, setSelectedUser, getChatListMessages } = useChatStore();
@@ -10,6 +11,9 @@ const Chats = ({ navigation }) => {
     setSelectedMessage(message); // Set the selected message
     setSelectedUser(message); // Set the selected user
     navigation.navigate('ChatScreen'); // Navigate to the ChatScreen
+    
+    // Trigger push notification when user opens the chat
+    sendPushNotification(message);  // Call function to send notification
   };
 
   const chatListMessages = getChatListMessages(); // Get only incoming messages (no replies)
@@ -76,6 +80,7 @@ const Chats = ({ navigation }) => {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
