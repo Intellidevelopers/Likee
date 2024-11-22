@@ -37,6 +37,8 @@ export const datesData = [
       ],
       statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,  // Use the correct color from your `colors` module
       workExperience: 'Business',
+      education: 'Education',
+      education: 'Education',
       jobTitle: 'Fashion Photographer',
       interests: ['Travel', 'Photography', 'Cooking'],
       socialMedia: [
@@ -69,6 +71,7 @@ export const datesData = [
       ],
       statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
       workExperience: 'Business',
+      education: 'Education',
       jobTitle: 'Fashion Photographer',
       interests: ['Travel', 'Photography', 'Cooking'],
       socialMedia: [
@@ -101,6 +104,7 @@ export const datesData = [
       ],
       statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
       workExperience: 'Business',
+      education: 'Education',
       jobTitle: 'Fashion Photographer',
       interests: ['Travel', 'Photography', 'Cooking'],
       socialMedia: [
@@ -133,6 +137,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -165,6 +170,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -198,6 +204,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -230,6 +237,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -262,6 +270,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -294,6 +303,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -326,6 +336,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -358,6 +369,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -390,6 +402,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -422,6 +435,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -454,6 +468,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [
@@ -486,6 +501,7 @@ export const datesData = [
         ],
         statusIcon: <CheckBadgeIcon size={24} color="#00FF00" />,
         workExperience: 'Business',
+        education: 'Education',
         jobTitle: 'Fashion Photographer',
         interests: ['Travel', 'Photography', 'Cooking'],
         socialMedia: [

@@ -22,6 +22,10 @@ import ChatScreen from './screens/ChatScreen';
 import { StatusBar } from 'expo-status-bar';
 import Pricing from './screens/Pricing';
 import Credits from './screens/Credits';
+import Notification from './screens/Notification';
+import EditProfile from './screens/EditProfile';
+import UploadPhotos from './screens/UploadPhotos';
+import ActivitiesScreen from './screens/ActivitiesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +50,10 @@ function App() {
         <Stack.Screen name="ChatScreen" component={ChatScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Pricing" component={Pricing} options={{ headerShown: false }}/>
         <Stack.Screen name="Credit" component={Credits} options={{ headerShown: false }}/>
+        <Stack.Screen name="Notification" component={Notification} options={{ headerShown: false }}/>
+        <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }}/>
+        <Stack.Screen name="Upload" component={UploadPhotos} options={{ headerShown: false }}/>
+        <Stack.Screen name="Activities" component={ActivitiesScreen} options={{ headerShown: false }}/>
       </Stack.Navigator>
       <StatusBar backgroundColor='#fff'/>
     </NavigationContainer>

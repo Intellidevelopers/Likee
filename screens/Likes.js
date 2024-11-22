@@ -26,8 +26,8 @@ const Likes = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView contentContainerStyle={styles.gridContainer}>
-        {[1, 2, 3].map((item, index) => (
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.gridContainer}>
+        {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
           <View key={index} style={styles.profileContainer}>
             <Image
               source={require('../assets/images/user1.jpg')} // Use your blurred image URI
@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    flex: 1,
+    flexGrow: 1,
+    paddingBottom: 40
   },
   profileContainer: {
     width: '48%',

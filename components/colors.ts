@@ -29,6 +29,7 @@ const colors = {
     // Add more as needed
     oldgreyBackground: '#F6F9FF', // Background color
     cahtBubble: '#CDDCF8', //
+    periwinkle: '#D4DAFC', // Periwinkle
   
   };
   

@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
   },
   slide: {
     width: width,
-    padding: 20,
     justifyContent: 'center',
   },
   title: {
