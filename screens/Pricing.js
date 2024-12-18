@@ -69,7 +69,7 @@ const Pricing = ({ navigation }) => {
       </ScrollView>
 
       <Text style={styles.footerText}>
-        Your payment account will be charged ₦{selectedCard === '1 month' ? '2,900.00' : selectedCard === '6 months' ? '9,900.00' : '5,900.00'} for {selectedCard || '1 month'} MatchArenal Premium. Cancel anytime. For instructions on how to cancel, visit our FAQs page. Bonus credits percentage may change for future credit purchases. Terms & Conditions.
+        Your payment account will be charged ₦{selectedCard === '1 month' ? '2,900.00' : selectedCard === '6 months' ? '9,900.00' : '5,900.00'} for {selectedCard || '1 month'} Sodate Premium. Cancel anytime. For instructions on how to cancel, visit our FAQs page. Bonus credits percentage may change for future credit purchases. Terms & Conditions.
       </Text>
 
       {/* Continue Button */}

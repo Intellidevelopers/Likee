@@ -69,12 +69,12 @@ const OnboardingScreen = ({ navigation }) => {
         ))}
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.buttonText}>Create an account</Text>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GetStarted')}>
+        <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
-      <Text style={styles.footerText}>
+      <TouchableOpacity style={styles.footerText} onPress={() => navigation.navigate('Login')}>
         Already have an account? <Text style={styles.signInText}>Sign In</Text>
-      </Text>
+      </TouchableOpacity>
     </View>
   );
 };

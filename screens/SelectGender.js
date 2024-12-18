@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import colors from '../components/colors';
@@ -31,11 +31,7 @@ const SelectGender = ({ navigation }) => {
           ]}
           onPress={() => handleGenderSelect('male')}
         >
-          <FontAwesome
-            name="male"
-            color={selectedGender === 'male' ? '#E03368' : '#000'}
-            size={30}
-          />
+          <Image source={require('../assets/2.png')} color={selectedGender === 'male' ? '#E03368' : '#000'} style={styles.icon}/>
           <Text
             style={
               selectedGender === 'male' ? styles.activeText : styles.optionText
@@ -53,11 +49,7 @@ const SelectGender = ({ navigation }) => {
           ]}
           onPress={() => handleGenderSelect('female')}
         >
-          <FontAwesome
-            name="female"
-            color={selectedGender === 'female' ? '#E03368' : '#000'}
-            size={30}
-          />
+          <Image source={require('../assets/22.png')} color={selectedGender === 'female' ? '#E03368' : '#000'} style={styles.icon}/>
           <Text
             style={
               selectedGender === 'female' ? styles.activeText : styles.optionText
@@ -121,7 +113,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginVertical: 160,
+    marginTop: 'auto',
+    marginBottom: 20
   },
   disabledButton: {
     backgroundColor: '#ccc', // Change background color when disabled
@@ -135,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 50,
+    marginTop: 20,
   },
   activeOption: {
     borderWidth: 2,
@@ -167,6 +160,11 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#000', // Default text color
   },
+  icon:{
+    width: 50,
+    height: 50,
+    resizeMode: 'contain'
+  }
 });
 
 export default SelectGender;

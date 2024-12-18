@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
 import { AntDesign, Feather, FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import colors from '../components/colors';
+import { StatusBar } from 'expo-status-bar';
 
 const AddProfile = ({ navigation }) => {
   const [image, setImage] = useState(null);
@@ -69,9 +70,10 @@ const AddProfile = ({ navigation }) => {
   return (
     <View style={styles.container}>
      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
-          <AntDesign name='leftcircleo' size={32} color={colors.primary}/>
+          <AntDesign name='leftcircleo' size={35} color={colors.primary}/>
       </TouchableOpacity>
 
+      <ScrollView style={styles.contentContainer} showsVerticalScrollIndicator={false}>
       <Text style={styles.title}>Add Profile Details</Text>
       <Text style={styles.subtitle}>Please add your profile details here</Text>
 
@@ -117,7 +119,7 @@ const AddProfile = ({ navigation }) => {
         />
       </View>
 
-      <View style={styles.inputContainer}>
+      <TouchableOpacity style={styles.inputContainer} onPress={showDatePicker}>
         <TextInput
           style={styles.input}
           placeholder="Date of Birth"
@@ -125,10 +127,10 @@ const AddProfile = ({ navigation }) => {
           onChangeText={setDob}
           editable={false}
         />
-        <TouchableOpacity onPress={showDatePicker}>
+        <View >
           <FontAwesome name="calendar" size={20} color="#999" style={styles.calendarIcon} />
-        </TouchableOpacity>
-      </View>
+        </View>
+      </TouchableOpacity>
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -142,6 +144,7 @@ const AddProfile = ({ navigation }) => {
       <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
+      </ScrollView>
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -151,6 +154,8 @@ const AddProfile = ({ navigation }) => {
       />
 
       <Toast />
+      <StatusBar backgroundColor={colors.greyBackground}/>
+
     </View>
   );
 };
@@ -158,8 +163,8 @@ const AddProfile = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
-    backgroundColor: '#FFF',
+    paddingHorizontal: 10,
+    backgroundColor: colors.greyBackground,
     padding: 10,
   },
   header: {
@@ -168,7 +173,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 50,
+    marginTop: 10,
   },
   subtitle: {
     fontSize: 14,
@@ -184,32 +189,31 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 150,
+    height: 150,
+    borderRadius: 100,
     borderWidth: 2,
-    borderColor: '#E03368',
+    borderColor: '#aaa',
   },
   editIconContainer: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: 5,
+    right: 10,
     backgroundColor: '#E03368',
     borderRadius: 20,
-    padding: 5,
+    padding: 10,
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 10,
     paddingHorizontal: 15,
     marginBottom: 15,
+    backgroundColor: colors.input
   },
   input: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: 15,
     fontSize: 16,
   },
   calendarIcon: {
@@ -226,6 +230,12 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: '500',
+  },
+  contentContainer:{
+    backgroundColor: '#fff',
+    padding: 10,
+    marginTop: 40,
+    borderRadius: 10
   },
 });
 

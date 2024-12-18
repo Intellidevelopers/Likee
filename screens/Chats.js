@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, Pressable } from 'react-native';
 import { Ionicons, MaterialIcons, FontAwesome, SimpleLineIcons, Octicons } from '@expo/vector-icons';
 import useChatStore from '../stores/useChatStore';
 import { sendPushNotification } from '../utils/notifications';  // Assuming this is the function to send notifications
@@ -24,7 +24,9 @@ const Chats = ({ navigation }) => {
         <Text style={styles.header}>Chats</Text>
         <View style={styles.miniContainer}>
           <SimpleLineIcons name="speedometer" size={24} color="black" />
-          <Octicons name="bell-fill" size={24} color="black" />
+          <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
+            <Octicons name="bell-fill" size={24} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -63,7 +65,7 @@ const Chats = ({ navigation }) => {
       {/* Message List */}
       <ScrollView contentContainerStyle={styles.content}>
         {chatListMessages.map((message) => (
-          <TouchableOpacity
+          <Pressable
             style={styles.messageItem}
             key={message.id}
             onPress={() => handleMessagePress(message)}
@@ -74,7 +76,7 @@ const Chats = ({ navigation }) => {
               <Text style={styles.contactMessage}>{message.message}</Text>
             </View>
             <Ionicons name="star-outline" size={20} color="gray" />
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </ScrollView>
     </View>

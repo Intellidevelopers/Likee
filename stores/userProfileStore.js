@@ -8,7 +8,7 @@ const userProfileStore = create((set) => ({
     age: null,
     bio: '',
     distance: '',
-    imgPath: null, // add imgPath for profile image
+    imageUrl: null, // add imgPath for profile image
   },
   setUserProfile: (profile) => set({ userProfile: profile }),
 }));

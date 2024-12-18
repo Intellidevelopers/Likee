@@ -5,6 +5,10 @@ import { Audio } from 'expo-av'; // Import from Expo AV for audio recording
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import useChatStore from '../stores/useChatStore'; // Import the Zustand store
 import colors from '../components/colors';
+import ChatHeader from '../components/ChatHeader';
+import ChatList from '../components/ChatList';
+import ReplyBar from '../components/ReplyBar';
+import InputBar from '../components/InputBar';
 
 const ChatScreen = ({ navigation }) => {
   const [message, setMessage] = useState('');
@@ -116,32 +120,52 @@ const ChatScreen = ({ navigation }) => {
         <View style={styles.messageContent}>
           {item.repliedTo && (
             <View style={styles.repliedMessageContainer}>
-              <Text style={styles.repliedMessageText}>
-                Replying to: <Text style={{ color: '#555', marginLeft: 5, marginBottom: 5, fontWeight: '400' }}>{item.repliedMessage}</Text>
-              </Text>
+              <View>
+                <Text style={styles.repliedMessageText}>{selectedUser?.name}</Text>
+                <Text
+                  style={{
+                    color: "#f1f1f1",
+                    fontWeight: "400",
+                    marginBottom: 10,
+                  }}
+                >
+                  {item.repliedMessage}
+                </Text>
+              </View>
             </View>
           )}
-          {item.type === 'audio' ? (
+          {item.type === "audio" ? (
             <TouchableOpacity onPress={() => handlePlayPause(item)}>
               <View style={styles.audioMessageContainer}>
                 <Ionicons
-                  name={isPlaying ? 'pause-circle' : 'play-circle'}
+                  name={isPlaying ? "pause-circle" : "play-circle"}
                   size={30}
                   color="#1E90FF"
                 />
-                <Text style={styles.audioMessage}>{isPlaying ? 'Pause' : 'Play'} Voice Message</Text>
+                <Text style={styles.audioMessage}>
+                  {isPlaying ? "Pause" : "Play"} Voice Message
+                </Text>
               </View>
             </TouchableOpacity>
           ) : (
-            <Text style={styles.messageText}>{item.message}</Text>
+            <Text
+              style={[
+                styles.messageText,
+                item.isUser
+                  ? styles.myMessageText
+                  : styles.otherMessageText,
+              ]}
+            >
+              {item.message}
+            </Text>
           )}
           <View style={styles.messageFooter}>
             <Text style={styles.messageTime}>{item.time}</Text>
             {item.isUser && (
               <Ionicons
-                name={item.read ? 'checkmark-done' : 'checkmark'}
+                name={item.read ? "checkmark-done" : "checkmark"}
                 size={16}
-                color={item.read ? '#1E90FF' : '#888'}
+                color={item.read ? "#1E90FF" : "#888"}
                 style={styles.checkMark}
               />
             )}
@@ -152,9 +176,22 @@ const ChatScreen = ({ navigation }) => {
   );
   
   
-
+  
+  const isInvalidMessage = (msg) => {
+    const phonePattern = /(\+?\d{1,4}[-.\s]?)?(\(?\d{2,4}\)?[-.\s]?)?[\d-.\s]{5,13}\d/;
+    const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+    const contactKeywords = /\b(contact|phone|email|mobile|whatsapp)\b/i;
+  
+    return phonePattern.test(msg) || emailPattern.test(msg) || contactKeywords.test(msg);
+  };
+  
   const handleSendMessage = () => {
     if (message.trim()) {
+      if (isInvalidMessage(message)) {
+        alert("Message cannot contain phone numbers, emails, or contact info!");
+        return;
+      }
+  
       const newMessage = {
         id: (messages.length + 1).toString(),
         sender: 'You',
@@ -166,12 +203,13 @@ const ChatScreen = ({ navigation }) => {
         repliedMessage: selectedMessage ? selectedMessage.message : null,
         name: selectedUser?.name,
       };
-
+  
       addMessage(newMessage);
       setMessage('');
       setSelectedMessage(null);
     }
   };
+  
 
   const startRecording = async () => {
     try {
@@ -280,63 +318,28 @@ const ChatScreen = ({ navigation }) => {
   
 
   return (
-    <GestureHandlerRootView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={{ uri: selectedUser?.imageUrl }} style={styles.headerProfileImage} />
-        </TouchableOpacity>
-        <View style={styles.headerDetails}>
-          <Text style={styles.headerName}>{selectedUser?.name}</Text>
-          <Text style={styles.headerStatus}>{selectedUser?.status}</Text>
-        </View>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Entypo name="dots-three-horizontal" size={24} color="#000" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.headerIcon}>
-          <Ionicons name="flag-outline" size={24} color="#000" />
-        </TouchableOpacity>
-      </View>
+<GestureHandlerRootView style={styles.container}>
+  <ChatHeader navigation={navigation} selectedUser={selectedUser} />
+  <ChatList
+    messages={filteredMessages}
+    onGestureEvent={onGestureEvent}
+    onHandlerStateChange={onHandlerStateChange}
+    renderMessage={renderMessage}
+  />
+  <ReplyBar
+    selectedMessage={selectedMessage}
+    onCancelReply={() => setSelectedMessage(null)}
+  />
+  <InputBar
+    message={message}
+    onChangeMessage={setMessage}
+    onSendMessage={handleSendMessage}
+    isRecording={isRecording}
+    onMicPress={handleMicPress}
+    soundWaveAnimation={soundWaveAnimation}
+  />
+</GestureHandlerRootView>
 
-      {/* Chat List with PanGestureHandler */}
-      <ScrollView style={styles.chatList}>
-        {filteredMessages.map(renderMessage)}
-      </ScrollView>
-
-      {/* Selected message to reply to */}
-      {selectedMessage && (
-        <View style={styles.replyContainer}>
-          <Text style={styles.replyText}>Replying to: {selectedMessage.message}</Text>
-        </View>
-      )}
-
-      {/* Input Bar */}
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Type a message"
-          value={message}
-          onChangeText={setMessage}
-          onSubmitEditing={handleSendMessage}
-        />
-        <TouchableOpacity style={styles.iconButton} onPress={handleMicPress}>
-          <Ionicons
-            name={isRecording ? 'stop-circle-outline' : 'mic-outline'}
-            size={24}
-            color={isRecording ? 'red' : '#555'}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
-          <Ionicons name="image-outline" size={24} color="#555" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
-          <MaterialIcons name="send" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-    </GestureHandlerRootView>
   );
 };
 
@@ -386,17 +389,32 @@ const styles = StyleSheet.create({
     maxWidth: '80%',
   },
   myMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: colors.cahtBubble,
-    borderRadius: 15,
+    backgroundColor: "#4C637F", // Blue background for user's messages
+    alignSelf: "flex-end",
+    borderRadius: 10,
     padding: 10,
+    marginHorizontal: 10,
   },
   otherMessage: {
-    flexDirection: 'row',
-    alignSelf: 'flex-start',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
+    backgroundColor: "#585292", // Gray background for other messages
+    alignSelf: "flex-start",
+    borderRadius: 10,
     padding: 10,
+    marginHorizontal: 10,
+  },
+  messageText: {
+    fontSize: 15,
+    lineHeight: 20,
+  },
+  myMessageText: {
+    color: "#FFFFFF", // White text for user's messages
+    marginBottom: 5,
+    fontSize: 15,
+
+  },
+  otherMessageText: {
+    color: "#fff", // Black text for other messages
+    fontSize: 16,
   },
   repliedMessage: {
     borderColor: '#25D366',
@@ -421,20 +439,22 @@ const styles = StyleSheet.create({
   },
   messageTime: {
     fontSize: 12,
-    color: '#888',
-    marginTop: 5,
+    color: "#fff",
   },
   checkMark: {
     marginLeft: 5,
+    color: "#00F642",
   },
   repliedMessageContainer: {
-    backgroundColor: '#f1f1f1',
+    backgroundColor: '#6B84A3',
     padding: 5,
     marginBottom: 5,
-    borderRadius: 10,
+    borderRadius: 5,
+    borderLeftWidth: 4,
+    borderLeftColor: colors.success,
   },
   repliedMessageText: {
-    color: colors.deepDeem,
+    color: colors.success,
     fontWeight: '400'
   },
   replyContainer: {

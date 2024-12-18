@@ -1,62 +1,100 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import colors from '../components/colors';
+import { StatusBar } from 'expo-status-bar';
 
 const Login = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({ email: '', password: '' });
+
+  // Validate email format using regex
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Handle Continue button press
+  const handleContinue = () => {
+    let valid = true;
+    const newErrors = { email: '', password: '' };
+
+    // Email Validation
+    if (!email) {
+      newErrors.email = 'Email is required';
+      valid = false;
+    } else if (!validateEmail(email)) {
+      newErrors.email = 'Please enter a valid email';
+      valid = false;
+    }
+
+    // Password Validation
+    if (!password) {
+      newErrors.password = 'Password is required';
+      valid = false;
+    }
+
+    setErrors(newErrors);
+
+    // If valid, navigate to EmailVerification
+    if (valid) {
+      navigation.navigate('Main');
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
-      <Image
-        source={require('../assets/icons/logo.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      {/* Header */}
+      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
+        <Entypo name="chevron-with-circle-left" size={40} color={colors.primary} />
+      </TouchableOpacity>
 
       {/* Title */}
-      <Text style={styles.title}>Signup to Continue</Text>
-      <Text style={styles.subtitle}>Please login to continue</Text>
-
-      {/* Continue with Email */}
-      <TouchableOpacity style={styles.emailButton} onPress={() => navigation.navigate('SelectInterest')}>
-        <Text style={styles.emailButtonText}>Continue with Email</Text>
-      </TouchableOpacity>
-
-      {/* Continue with Phone */}
-      <TouchableOpacity style={styles.phoneButton}>
-        <Text style={styles.phoneButtonText}>Continue with Phone Number</Text>
-      </TouchableOpacity>
-
-      {/* Divider with Social Signup */}
-        <Text style={styles.dividerText}>Or Signup with</Text>
-
-      {/* Social Signup Buttons */}
-      <View style={styles.socialContainer}>
-        <TouchableOpacity style={styles.socialButton}>
-          <Image
-            source={require('../assets/icons/google.png')}
-            style={styles.socialIcon}
-            resizeMode="contain"
-          />
-          <Text style={styles.socialButtonText}>Google</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.socialButton}>
-          <Image
-            source={require('../assets/icons/facebook.png')}
-            style={styles.socialIcon}
-            resizeMode="contain"
-          />
-          <Text style={styles.socialButtonText}>Facebook</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Terms and Conditions */}
-      <Text style={styles.termsText}>
-        I accept all the{' '}
-        <Text style={styles.linkText}>Terms & Conditions</Text> &{' '}
-        <Text style={styles.linkText}>Privacy Policy</Text>
+      <View style={styles.contentContainer}>
+      <Text style={styles.title}>Enter email to login</Text>
+      <Text style={styles.subtitle}>
+        Please enter your registered email address to login.
       </Text>
+
+      {/* Email Input */}
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Enter your email"
+          style={styles.input}
+          keyboardType="email-address"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+        />
+      </View>
+      {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
+
+      {/* Password Input */}
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Enter your password"
+          style={styles.input}
+          secureTextEntry={true}
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+        />
+      </View>
+      {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
+
+      {/* Continue Button */}
+      <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+        <Text style={styles.continueButtonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.footerText} onPress={() => navigation.navigate('GetStarted')}>
+              Already have an account? <Text style={styles.signInText}>Sign Up</Text>
+            </TouchableOpacity>
+      </View>
+      <StatusBar backgroundColor={colors.greyBackground}/>
+      <View style={styles.inssuredPolicy}>
+        <Text style={styles.inssuredText}>
+          By logging in, you agree to Likee's Terms of Service and Privacy Policy. You will be notified when your account has been updated and will be notified when you have logged out.
+        </Text>
+      </View>
     </View>
   );
 };
@@ -64,96 +102,81 @@ const Login = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 40,
-  },
-  logo: {
-    width: 80,
-    height: 80,
-    marginBottom: 20,
-    marginTop: 40
+    paddingHorizontal: 10,
+    backgroundColor: colors.greyBackground,
   },
   title: {
-    fontSize: 26,
-    fontWeight: '900',
-    color: '#333',
-    textAlign: 'center',
-    marginBottom: 10,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 10,
   },
   subtitle: {
-    fontSize: 17,
+    fontSize: 14,
     color: '#666',
-    textAlign: 'center',
-    marginBottom: 20,
+    marginVertical: 10,
+    lineHeight: 20,
+    marginBottom: 20
   },
-  emailButton: {
-    backgroundColor: colors.primary,
-    paddingVertical: 15,
-    paddingHorizontal: 90,
-    borderRadius: 10,
-    marginBottom: 15,
+  header: {
+    marginTop: 50,
   },
-  emailButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  phoneButton: {
-    borderColor: colors.border,
-    borderWidth: 2,
-    paddingVertical: 15,
-    paddingHorizontal: 55,
-    borderRadius: 10,
-    marginBottom: 30,
-  },
-  phoneButtonText: {
-    color: colors.primary,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  dividerText: {
-    fontSize: 16,
-    color: '#000',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-  socialContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 40,
-  },
-  socialButton: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderColor: '#EAEAEA',
     borderWidth: 1,
-    paddingHorizontal: 30,
+    borderColor: colors.border,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  input: {
+    padding: 15,
+    flex: 1,
+    fontSize: 16,
+  },
+  continueButton: {
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     borderRadius: 10,
-    marginHorizontal: 10,
+    alignItems: 'center',
+    marginVertical: 20,
   },
-  socialIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  socialButtonText: {
+  continueButtonText: {
+    color: '#FFF',
     fontSize: 16,
-    fontWeight: 'bold',
-    color: '#555',
+    fontWeight: '500',
   },
-  termsText: {
-    fontSize: 14,
-    color: '#000',
-    textAlign: 'center',
+  errorText: {
+    color: 'red',
     marginBottom: 10,
-    marginTop: 70,
+    fontSize: 12,
   },
-  linkText: {
-    color: colors.primary,
-    textDecorationLine: 'underline',
+  contentContainer:{
+    backgroundColor: '#fff',
+    padding: 10,
+    marginTop: 40,
+    borderRadius: 10
+  },
+  inssuredPolicy:{
+    marginTop: 'auto',
+    alignItems: 'center',
+    marginBottom: 20
+  },
+  inssuredText:{
+    color: '#666',
+    fontSize: 12,
+    lineHeight: 18,
+    textAlign: 'center'  // Center text horizontally
+  },
+  footerText: {
+    color: '#707070',
+    fontSize: 14,
+    marginBottom: 20,
+    alignSelf: 'center'
+  },
+  signInText: {
+    color: '#FF4C61',
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
 });
 

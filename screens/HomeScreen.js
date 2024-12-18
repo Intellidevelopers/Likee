@@ -1,22 +1,23 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { CheckBadgeIcon } from 'react-native-heroicons/solid';
-import { Ionicons, Octicons } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import userProfileStore from '../stores/userProfileStore';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native'; 
 import { datesData } from '../components/datesData';
-import { user1 } from "../assets/images";
+import { profile } from "../assets/images";
 import colors from '../components/colors';
 
 const { width, height } = Dimensions.get('window');
 
 const HomeScreen = () => {
-  
   const setUserProfile = userProfileStore((state) => state.setUserProfile);
   const navigation = useNavigation();
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
+  const drawerAnim = useRef(new Animated.Value(-width)).current; // Drawer starts offscreen
+  const overlayAnim = useRef(new Animated.Value(0)).current; // Overlay starts invisible
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const combinedData = [...datesData, ...datesData]; // Duplicate data for seamless scrolling
 
   const handleClick = (item) => {
@@ -35,8 +36,40 @@ const HomeScreen = () => {
     }
   };
 
+  const toggleDrawer = () => {
+    if (drawerOpen) {
+      // Close the drawer
+      Animated.timing(drawerAnim, {
+        toValue: -width,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(overlayAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // Open the drawer
+      Animated.timing(drawerAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+      Animated.timing(overlayAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    }
+    setDrawerOpen(!drawerOpen);
+  };
+
+  const closeDrawer = () => {
+    if (drawerOpen) toggleDrawer();
+  };
+
   useEffect(() => {
-    // Add an event listener to reset the scroll position when reaching the end
     scrollX.addListener(({ value }) => {
       if (value >= (datesData.length * width)) {
         scrollViewRef.current.scrollTo({ x: 0, animated: false });
@@ -72,9 +105,11 @@ const HomeScreen = () => {
         key={index}
         style={[styles.cardContainer, { transform: [{ scale }], opacity }]}
       >
+
         <TouchableWithoutFeedback onPress={() => handleClick(item)}>
-          <Image source={item.imgPath} style={styles.image} resizeMode="cover" />
+          <Image source={item.imageUrl} style={styles.image} resizeMode="cover" />
         </TouchableWithoutFeedback>
+
 
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,1)"]}
@@ -88,7 +123,7 @@ const HomeScreen = () => {
             <Text style={styles.nameText}>
               {item.name}, {item.age}
             </Text>
-            <CheckBadgeIcon size={22} color="#3B82F6" style={styles.badgeIcon} />
+            <MaterialIcons name="verified" size={22} color="#3B82F6" style={styles.badgeIcon} />
             <TouchableOpacity style={styles.actionButton} onPress={() => handleLike(index)}>
               <Ionicons name="heart-outline" size={24} color="#000" />
             </TouchableOpacity>
@@ -101,20 +136,73 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      {/* Overlay Background */}
+      <Animated.View
+        style={[styles.overlay, { opacity: overlayAnim }]}
+        onStartShouldSetResponder={closeDrawer} // Close drawer when clicked outside
+      />
+
+      {/* Custom Drawer */}
+      <Animated.View style={[styles.drawer, { transform: [{ translateX: drawerAnim }] }]}>
+        <View style={styles.drawerContent}>
+          <View style={styles.drawerHeaderContainer}>
+            <Text style={styles.drawerHeader}>Sodate.me</Text>
+            <TouchableOpacity
+            onPress={toggleDrawer} // Toggle drawer visibility
+            style={{ marginRight: 10 }}
+            >
+              <Feather name="x" size={32} color="black" />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.subText}>Quick navigation to your area of interest, you are one step away...</Text>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TapcoinTab")}>
+            <MaterialCommunityIcons name='gesture-double-tap' size={30}/>
+            <Text style={styles.drawerItem}>Tap Coin</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Wallet")}>
+            <Image source={require('../assets/wallet.png')} style={styles.walletIcon}/>
+            <Text style={styles.drawerItem}>My Wallet</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("UsersList")}>
+            <Image source={require('../assets/love.png')} style={styles.walletIcon}/>
+            <Text style={styles.drawerItem}>Rooms</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
+            <Image source={require('../assets/5.png')} style={styles.drawerIcon}/>
+            <Text style={styles.drawerItem}>Sugar Mummies</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
+            <Image source={require('../assets/26.png')} style={styles.drawerIcon}/>
+            <Text style={styles.drawerItem}>Sugar Daddies</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
+            <Image source={require('../assets/2.png')} style={styles.drawerIcon}/>
+            <Text style={styles.drawerItem}>Rosko & Gay</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
+            <MaterialCommunityIcons name='lock' color={"red"} size={30}/>
+            <Text style={styles.signoutText}>Sign Out</Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
+
+      {/* Main Screen Content */}
       <View style={styles.headerContainer}>
         <View style={styles.context}>
           <View style={styles.profileImageContainer}>
-            <Image source={user1} style={styles.profileImage} />
+            <Image source={profile} style={styles.profileImage} />
           </View>
           <View style={styles.info}>
-            <Text style={styles.headerTitle}>Mammie</Text>
+            <Text style={styles.headerTitle}>Adebayo</Text>
             <Text style={styles.subheaderText}>Good afternoon!</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-          <Octicons name='bell-fill' size={24} color="#000" />
+        <TouchableOpacity
+          onPress={toggleDrawer} // Toggle drawer visibility
+          style={{ marginTop: 20 }}
+        >
+          <Ionicons name="menu" size={32} color="black" />
         </TouchableOpacity>
-
       </View>
 
       <View style={styles.carouselContainer}>
@@ -143,7 +231,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 20,
-    backgroundColor: colors.white, // Sample background color
+    backgroundColor: colors.white,
   },
   headerContainer: {
     width: "100%",
@@ -193,7 +281,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'center',
     position: 'relative',
-    top: -5
+    top: -5,
   },
   image: {
     width: '100%',
@@ -216,7 +304,6 @@ const styles = StyleSheet.create({
   nameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    
   },
   nameText: {
     fontSize: 24,
@@ -238,17 +325,98 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 30,
     left: 90,
-    top: 15
+    top: 15,
   },
-  context:{
+  context: {
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-  subheaderText:{
+  subheaderText: {
     fontSize: 14,
     color: '#555',
   },
-  info:{
-    left: 10
-  }
+  info: {
+    left: 10,
+  },
+  drawer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: width * 0.75, // Adjust size of the drawer
+    backgroundColor: 'white',
+    zIndex: 1,
+    elevation: 5, // Adds shadow on Android
+  },
+  drawerContent: {
+    flex: 1,
+    paddingTop: 40,
+    paddingLeft: 20,
+  },
+  drawerHeader: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  drawerItem: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '500'
+  },
+
+  gradientOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    height: '40%',
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    zIndex: 0,
+  },
+  drawerHeaderContainer:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 1,
+    marginBottom: 20,
+    marginTop: 20
+  },
+  button:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 40,
+    gap: 10
+  },
+  drawerIcon:{
+    width: 30,
+    height: 30,
+    resizeMode: 'contain'
+  },
+  walletIcon:{
+    width: 35,
+    height: 35,
+    resizeMode: 'contain',
+    marginRight: -5
+  },
+  subText:{
+    fontSize: 14,
+    color: '#000',
+    width: '95%',
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#888',
+    paddingBottom: 10
+  },
+  signoutText:{
+    fontSize: 16,
+    color:'red',
+    fontWeight: '500'
+  },
 });

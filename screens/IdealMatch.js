@@ -1,37 +1,61 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import colors from '../components/colors';
 
+
 const IdealMatch = ({ navigation }) => {
   const [selectedOption, setSelectedOption] = useState(null); // State to track selected option
-  
+  const [isLoading, setIsLoading] = useState(false); // Loader state
+  const [loadingMessage, setLoadingMessage] = useState(''); // Random loading message
+
+  const loadingMessages = [
+    'Registration successful',
+  ];
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
+  };
+
+  const handleConfirmRegistration = () => {
+    setIsLoading(true); // Show loader
+    let messageIndex = 0;
+
+    // Change the message every 1 second
+    const messageInterval = setInterval(() => {
+      setLoadingMessage(loadingMessages[messageIndex]);
+      messageIndex = (messageIndex + 1) % loadingMessages.length;
+    }, 1000);
+
+    // Stop the loader and redirect after 3 seconds
+    setTimeout(() => {
+      clearInterval(messageInterval); // Stop updating messages
+      setIsLoading(false);
+      navigation.navigate('Match'); // Redirect to the Match screen
+    }, 3000);
   };
 
   const isContinueDisabled = selectedOption === null;
 
   return (
     <View style={styles.container}>
-       <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
-          <AntDesign name='leftcircleo' size={32} color={colors.primary}/>
+      {/* Header */}
+      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
+        <AntDesign name="leftcircleo" size={32} color={colors.primary} />
       </TouchableOpacity>
 
+      {/* Content */}
       <Text style={styles.title}>Ideal Match</Text>
       <Text style={styles.subtitle}>What are you hoping to find here on match arenal?</Text>
 
+      {/* Options */}
       <View>
         <TouchableOpacity
-          style={[
-            styles.optionContainer,
-            selectedOption === 'Love' && styles.activeOption,
-          ]}
+          style={[styles.optionContainer, selectedOption === 'Love' && styles.activeOption]}
           onPress={() => handleOptionSelect('Love')}
         >
-          <Image source={require('../assets/icons/bnb.png')} style={styles.icon} />
+          <Image source={require('../assets/2.png')} style={styles.icon} />
           <View>
             <Text style={[styles.optionText, selectedOption === 'Love' && styles.activeText]}>
               Love & Dating
@@ -41,13 +65,10 @@ const IdealMatch = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[
-            styles.optionContainer,
-            selectedOption === 'Friends' && styles.activeOption,
-          ]}
+          style={[styles.optionContainer, selectedOption === 'Friends' && styles.activeOption]}
           onPress={() => handleOptionSelect('Friends')}
         >
-          <Image source={require('../assets/icons/bnb.png')} style={styles.icon} />
+          <Image source={require('../assets/26.png')} style={styles.icon} />
           <View>
             <Text style={[styles.optionText, selectedOption === 'Friends' && styles.activeText]}>
               Friends with Benefits
@@ -57,13 +78,10 @@ const IdealMatch = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[
-            styles.optionContainer,
-            selectedOption === 'Business' && styles.activeOption,
-          ]}
+          style={[styles.optionContainer, selectedOption === 'Business' && styles.activeOption]}
           onPress={() => handleOptionSelect('Business')}
         >
-          <Image source={require('../assets/icons/bnb.png')} style={styles.icon} />
+          <Image source={require('../assets/5.png')} style={styles.icon} />
           <View>
             <Text style={[styles.optionText, selectedOption === 'Business' && styles.activeText]}>
               Sugar Mummy & Daddy
@@ -73,13 +91,10 @@ const IdealMatch = ({ navigation }) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[
-            styles.optionContainer,
-            selectedOption === 'Hookup' && styles.activeOption,
-          ]}
+          style={[styles.optionContainer, selectedOption === 'Hookup' && styles.activeOption]}
           onPress={() => handleOptionSelect('Hookup')}
         >
-          <Image source={require('../assets/icons/bnb.png')} style={styles.icon} />
+          <Image source={require('../assets/22.png')} style={styles.icon} />
           <View>
             <Text style={[styles.optionText, selectedOption === 'Hookup' && styles.activeText]}>
               Hookup
@@ -89,25 +104,22 @@ const IdealMatch = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
+      {/* Confirm Button */}
       <TouchableOpacity
-        style={[
-          styles.continueButton,
-          isContinueDisabled && styles.disabledButton,
-        ]}
+        style={[styles.continueButton, isContinueDisabled && styles.disabledButton]}
         disabled={isContinueDisabled}
-        onPress={() => {
-          if (selectedOption) {
-            Toast.show({
-              type: 'success',
-              text1: `You selected ${selectedOption}`,
-            });
-            // Navigate to a new screen
-            navigation.navigate('Main');
-          }
-        }}
+        onPress={handleConfirmRegistration}
       >
-        <Text style={styles.continueButtonText}>Continue</Text>
+        <Text style={styles.continueButtonText}>Confirm Registration</Text>
       </TouchableOpacity>
+
+      {/* Loader Overlay */}
+      {isLoading && (
+        <View style={styles.loaderOverlay}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loaderText}>{loadingMessage}</Text>
+        </View>
+      )}
 
       <Toast />
     </View>
@@ -139,7 +151,6 @@ const styles = StyleSheet.create({
   optionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
     padding: 15,
     marginVertical: 10,
     backgroundColor: colors.greyBackground,
@@ -167,13 +178,15 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 15,
+    resizeMode: 'contain',
   },
   continueButton: {
     backgroundColor: '#E03368',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: 'auto',
+    marginBottom: 10,
   },
   disabledButton: {
     backgroundColor: '#ccc',
@@ -182,6 +195,22 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontSize: 16,
     fontWeight: '500',
+  },
+  loaderOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loaderText: {
+    color: '#FFF',
+    fontSize: 16,
+    marginTop: 15,
+    textAlign: 'center',
   },
 });
 

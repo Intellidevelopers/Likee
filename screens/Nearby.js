@@ -7,22 +7,25 @@ import colors from '../components/colors';
 import userProfileStore from '../stores/userProfileStore';
 import { nearbyUsers } from '../components/NearbyData'; // Import NearbyData
 import { BottomSheet } from '@rneui/themed';
+import useChatStore from '../stores/useChatStore'; // Assuming you're using Zustand
+
 
 
 const Nearby = () => {
   const navigation = useNavigation();
   const setUserProfile = userProfileStore((state) => state.setUserProfile);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const { setSelectedUser } = useChatStore();
 
 
-  const handleClick = (item) => {
-    setUserProfile(item); // This will include name, age, bio, imgPath, etc.
-    navigation.navigate("UserProfile"); // Navigate to UserProfile screen
+  const handleUserSelect = (user) => {
+    setSelectedUser(user); // Save the selected user in your state
+    navigation.navigate('ChatScreen', { userId: user.id }); // Navigate to the chat screen
   };
-
+  
   const renderProfile = ({ item }) => (
-    <TouchableOpacity style={styles.profileCard} onPress={() => handleClick(item)}>
-      <Image source={item.imgPath} style={styles.profileImage} />
+    <TouchableOpacity style={styles.profileCard} onPress={() => handleUserSelect(item)}>
+      <Image source={item.imageUrl} style={styles.profileImage} />
       <View style={styles.profileContainer}>
         <Text style={styles.profileName}>{item.name}, {item.age}</Text>
         {item.isOnline && <View style={styles.onlineIndicator} />}

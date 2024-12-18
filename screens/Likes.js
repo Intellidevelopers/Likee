@@ -235,6 +235,17 @@ const styles = StyleSheet.create({
     color: '#000',
     marginTop: 10,
   },
+  offerCoin:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+    alignSelf: 'flex-end'
+  },
+  offerIcon:{
+    backgroundColor: colors.label,
+    padding: 5,
+    borderRadius: 30,
+  }
 });
 
 export default Likes;

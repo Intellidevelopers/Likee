@@ -21,7 +21,7 @@ const Profile = ({ navigation, progress = 100 }) => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Profile</Text>
         <View style={styles.headerIcons}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
             <Ionicons name="settings" size={24} color="black" style={styles.icon} />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('EditProfile')}>
@@ -124,7 +124,7 @@ const Profile = ({ navigation, progress = 100 }) => {
 
         <ScrollView horizontal style={styles.content} showsHorizontalScrollIndicator={false}>
         <View style={styles.subscriptionContainer}>
-          <Text style={styles.subscriptionTitle}>MATCHARENAL EXTRA</Text>
+          <Text style={styles.subscriptionTitle}>SODATE EXTRA</Text>
           <TouchableOpacity style={styles.extraButton}>
             <Text style={styles.extraText}>Get Extra (from ₦900)</Text>
           </TouchableOpacity>
@@ -174,7 +174,7 @@ const Profile = ({ navigation, progress = 100 }) => {
         </View>
         
         <View style={styles.subscriptionContainer2}>
-          <Text style={styles.subscriptionTitle}>MATCHARENAL PREMIUM</Text>
+          <Text style={styles.subscriptionTitle}>SODATE PREMIUM</Text>
           <TouchableOpacity style={styles.extraButton}>
             <Text style={styles.extraText}>Get Extra (from ₦1,500)</Text>
           </TouchableOpacity>
@@ -236,7 +236,7 @@ const Profile = ({ navigation, progress = 100 }) => {
                   <MaterialCommunityIcons name="shield-check" size={18} color="#000" />
                 </View>
                 <View>
-                  <Text style={styles.infoDetail}>Get help from Matcharenal</Text>
+                  <Text style={styles.infoDetail}>Get help from SODATE</Text>
                 </View>
             </Pressable>
 

@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Modal } from "react-native";
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Modal, Pressable, Linking } from "react-native";
 import React, { useState } from "react";
 import userProfileStore from '../stores/userProfileStore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
@@ -16,7 +16,10 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
     navigation.navigate('ChatScreen', { user, imageUrl: user.imgPath }); // Pass imgPath as imageUrl
   };
   
-  
+  const handleUserSelect = (user) => {
+    setSelectedUser(user); // Save the selected user in your state
+    navigation.navigate('ChatScreen', { userId: user.id }); // Navigate to the chat screen
+  };
 
   if (!userProfile) {
     return (
@@ -40,7 +43,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {/* Profile Image */}
       <View>
-        <Image source={userProfile.imgPath} style={styles.profileImage} />
+        <Image source={userProfile.imageUrl} style={styles.profileImage} />
       </View>
       <View style={styles.header}>
         <TouchableOpacity style={styles.cameraButton}>
@@ -81,13 +84,13 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
         </View>
 
         {/* Gallery */}
-        <View style={styles.gallery}>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal style={styles.gallery}>
           {userProfile.gallery?.slice(0, 4).map((image, index) => (
-            <TouchableOpacity key={index} style={styles.galleryImageContainer} onPress={() => openImageModal(image)}>
+            <Pressable key={index} style={styles.galleryImageContainer} onPress={() => openImageModal(image)}>
               <Image source={{ uri: image }} style={styles.galleryImage} />
-            </TouchableOpacity>
+            </Pressable>
           ))}
-        </View>
+        </ScrollView>
 
         {/* Info Container */}
         <View style={styles.infoContainer}>
@@ -232,14 +235,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: hp(2),
-    justifyContent: 'space-between',
   },
   galleryImageContainer: {
-    width: wp(47), // Adjust width for 2 images per row
-    height: hp(30), // Adjust height as needed
+    width: wp(90), // Adjust width for 2 images per row
+    height: hp(70), // Adjust height as needed
     marginBottom: hp(1),
     borderRadius: 10,
     overflow: 'hidden',
+    marginRight: 15
+
   },
   galleryImage: {
     width: '100%',
