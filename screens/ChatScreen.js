@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet, Animated, ScrollView } from 'react-native';
-import { Ionicons, MaterialIcons, Entypo } from '@expo/vector-icons';
-import { Audio } from 'expo-av'; // Import from Expo AV for audio recording
+import { View, Text, TouchableOpacity, Image, StyleSheet, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler';
 import useChatStore from '../stores/useChatStore'; // Import the Zustand store
 import colors from '../components/colors';
@@ -13,12 +12,6 @@ import InputBar from '../components/InputBar';
 const ChatScreen = ({ navigation }) => {
   const [message, setMessage] = useState('');
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [soundWaveAnimation] = useState(new Animated.Value(1));
-  const [recordedUri, setRecordedUri] = useState(null);
-  const recordingRef = useRef(null);
-  const [isPlaying, setIsPlaying] = useState(false); // Track the playing state of the audio
-  const soundRef = useRef(new Audio.Sound()); 
 
   const selectedUser = useChatStore(state => state.selectedUser);
   const messages = useChatStore(state => state.messages);
@@ -67,38 +60,6 @@ const ChatScreen = ({ navigation }) => {
     }
   };
 
-  const handlePlayPause = async (item) => {
-    if (isPlaying) {
-      // Pause the audio if it's playing
-      await soundRef.current.pauseAsync();
-      setIsPlaying(false);
-    } else {
-      try {
-        // Unload the previous sound if it's already loaded
-        await soundRef.current.unloadAsync();
-  
-        // Load the new audio
-        await soundRef.current.loadAsync({ uri: item.audioUri });
-  
-        // Set up playback status update
-        soundRef.current.setOnPlaybackStatusUpdate((status) => {
-          if (status.isLoaded && status.didJustFinish) {
-            // If playback is finished, update the play state to false
-            setIsPlaying(false);
-          }
-        });
-  
-        // Play the audio
-        await soundRef.current.playAsync();
-        setIsPlaying(true);
-      } catch (err) {
-        console.error('Error playing audio', err);
-      }
-    }
-  };
-  
-  
-  
   const renderMessage = (item) => (
     <PanGestureHandler
       onGestureEvent={onGestureEvent(item.id)}
@@ -209,112 +170,7 @@ const ChatScreen = ({ navigation }) => {
       setSelectedMessage(null);
     }
   };
-  
 
-  const startRecording = async () => {
-    try {
-      console.log('Requesting permissions...');
-      const permission = await Audio.requestPermissionsAsync();
-      if (permission.status !== 'granted') {
-        console.log('Permission to access microphone is required.');
-        return;
-      }
-
-      console.log('Starting recording...');
-      setIsRecording(true);
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(soundWaveAnimation, { toValue: 1.5, duration: 500, useNativeDriver: true }),
-          Animated.timing(soundWaveAnimation, { toValue: 1, duration: 500, useNativeDriver: true }),
-        ])
-      ).start();
-
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      recordingRef.current = recording;
-    } catch (err) {
-      console.error('Failed to start recording', err);
-    }
-  };
-
-  const stopRecording = async () => {
-    console.log('Stopping recording...');
-    setIsRecording(false);
-    Animated.timing(soundWaveAnimation).stop();
-    if (recordingRef.current) {
-      await recordingRef.current.stopAndUnloadAsync();
-      const uri = recordingRef.current.getURI();
-      console.log('Recording completed and stored at', uri);
-      setRecordedUri(uri);
-    }
-  };
-
-  const handleMicPress = async () => {
-    if (isRecording) {
-      // Stop recording and send the audio message
-      try {
-        setIsRecording(false);
-        Animated.timing(soundWaveAnimation).stop();
-        if (recordingRef.current) {
-          await recordingRef.current.stopAndUnloadAsync();
-          const uri = recordingRef.current.getURI();
-          console.log('Recording completed and stored at', uri);
-          setRecordedUri(uri);
-  
-          // Add the recorded audio to the chat
-          if (uri) {
-            const newAudioMessage = {
-              id: (messages.length + 1).toString(),
-              sender: 'You',
-              message: null, // No text, only audio
-              audioUri: uri, // Store the audio URI
-              time: new Date().toLocaleTimeString(),
-              isUser: true,
-              read: false,
-              repliedTo: selectedMessage?.id || null,
-              repliedMessage: selectedMessage ? selectedMessage.message : null,
-              name: selectedUser?.name,
-              type: 'audio', // Indicate that this is an audio message
-            };
-  
-            // Add the new message to the chat store
-            addMessage(newAudioMessage);
-            setSelectedMessage(null);
-          }
-        }
-      } catch (err) {
-        console.error('Failed to stop recording', err);
-      }
-    } else {
-      // Start recording
-      try {
-        console.log('Requesting permissions...');
-        const permission = await Audio.requestPermissionsAsync();
-        if (permission.status !== 'granted') {
-          console.log('Permission to access microphone is required.');
-          return;
-        }
-  
-        console.log('Starting recording...');
-        setIsRecording(true);
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(soundWaveAnimation, { toValue: 1.5, duration: 500, useNativeDriver: true }),
-            Animated.timing(soundWaveAnimation, { toValue: 1, duration: 500, useNativeDriver: true }),
-          ])
-        ).start();
-  
-        const { recording } = await Audio.Recording.createAsync(
-          Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-        );
-        recordingRef.current = recording;
-      } catch (err) {
-        console.error('Failed to start recording', err);
-      }
-    }
-  };
-  
   
 
   return (
@@ -334,9 +190,6 @@ const ChatScreen = ({ navigation }) => {
     message={message}
     onChangeMessage={setMessage}
     onSendMessage={handleSendMessage}
-    isRecording={isRecording}
-    onMicPress={handleMicPress}
-    soundWaveAnimation={soundWaveAnimation}
   />
 </GestureHandlerRootView>
 

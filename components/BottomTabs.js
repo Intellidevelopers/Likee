@@ -35,10 +35,10 @@ const CustomBottomTabs = () => {
             <View style={styles.iconContainer}>
               <MaterialCommunityIcons
                 name="cards"
-                size={24}
-                color={focused ? '#ff6347' : '#666'}
+                size={26}
+                color={focused ? '#22426A' : '#888'}
               />
-              <Text style={{ color: focused ? '#ff6347' : '#666' }}>Swipe</Text>
+              <Text style={{ color: focused ? '#22426A' : '#888' }}>Swipe</Text>
             </View>
           ),
         }}
@@ -51,10 +51,10 @@ const CustomBottomTabs = () => {
             <View style={styles.iconContainer}>
               <Ionicons
                 name="location"
-                size={24}
-                color={focused ? '#ff6347' : '#666'}
+                size={26}
+                color={focused ? '#22426A' : '#888'}
               />
-              <Text style={{ color: focused ? '#ff6347' : '#666' }}>Nearby</Text>
+              <Text style={{ color: focused ? '#22426A' : '#888' }}>Nearby</Text>
             </View>
           ),
         }}
@@ -67,10 +67,10 @@ const CustomBottomTabs = () => {
             <View style={styles.iconContainer}>
               <Ionicons
                 name="heart"
-                size={24}
-                color={focused ? '#ff6347' : '#666'}
+                size={26}
+                color={focused ? '#22426A' : '#888'}
               />
-              <Text style={{ color: focused ? '#ff6347' : '#666' }}>Likes</Text>
+              <Text style={{ color: focused ? '#22426A' : '#888' }}>Likes</Text>
             </View>
           ),
           tabBarBadge: 3, // Badge number for Likes
@@ -85,10 +85,10 @@ const CustomBottomTabs = () => {
             <View style={styles.iconContainer}>
               <Ionicons
                 name="chatbubble"
-                size={24}
-                color={focused ? '#ff6347' : '#666'}
+                size={26}
+                color={focused ? '#22426A' : '#888'}
               />
-              <Text style={{ color: focused ? '#ff6347' : '#666' }}>Chats</Text>
+              <Text style={{ color: focused ? '#22426A' : '#888' }}>Chats</Text>
             </View>
           ),
           tabBarBadge: 5, // Badge number for Chats
@@ -103,10 +103,10 @@ const CustomBottomTabs = () => {
             <View style={styles.iconContainer}>
               <Ionicons
                 name="person"
-                size={24}
-                color={focused ? '#ff6347' : '#666'}
+                size={26}
+                color={focused ? '#22426A' : '#888'}
               />
-              <Text style={{ color: focused ? '#ff6347' : '#666' }}>Profile</Text>
+              <Text style={{ color: focused ? '#22426A' : '#888' }}>Profile</Text>
             </View>
           ),
         }}
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabBadge: {
-    backgroundColor: 'red', // Badge background color
+    backgroundColor: 'green', // Badge background color
     color: '#fff', // Badge text color
     fontSize: 12, // Badge text size
     fontWeight: 'bold', // Badge text weight
@@ -143,10 +143,10 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#ff6347',
+    backgroundColor: '#22426A',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#ff6347',
+    shadowColor: '#22426A',
     shadowOpacity: 0.3,
     shadowOffset: { width: 0, height: 10 },
     shadowRadius: 10,

@@ -54,7 +54,7 @@ const EmailVerification = ({ navigation }) => {
 
       {/* Title */}
       <Text style={styles.title}>Enter Verification Code</Text>
-      <Text style={styles.subtitle}>We have sent code to your number 0808 888 6823</Text>
+      <Text style={styles.subtitle}>We have sent 4 digit code to your email <Text style={{fontWeight:'500', color: '#000'}}>adeagbojosiah1@gmail.com</Text></Text>
 
       {/* OTP Input */}
       <View style={styles.inputContainer}>

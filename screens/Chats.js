@@ -70,12 +70,12 @@ const Chats = ({ navigation }) => {
             key={message.id}
             onPress={() => handleMessagePress(message)}
           >
-            <Image source={{ uri: message.imageUrl }} style={styles.contactImage} />
+            <Image source={require('../assets/dates/1.jpg')} style={styles.contactImage} />
             <View style={styles.messageTextContainer}>
-              <Text style={styles.contactName}>{message.name}</Text>
+              <Text style={styles.contactName}>Adenike Taiwo</Text>
               <Text style={styles.contactMessage}>{message.message}</Text>
             </View>
-            <Ionicons name="star-outline" size={20} color="gray" />
+            <Ionicons name="chatbubbles-outline" size={20} color="gray" />
           </Pressable>
         ))}
       </ScrollView>
@@ -157,6 +157,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
+    justifyContent: 'center',
   },
   contactImage: {
     width: 60,
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
   contactMessage: {
     fontSize: 14,
     color: '#666',
+    width: '95%'
   },
   bottomNav: {
     flexDirection: 'row',

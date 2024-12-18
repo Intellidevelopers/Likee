@@ -18,13 +18,13 @@ const Nearby = () => {
   const { setSelectedUser } = useChatStore();
 
 
-  const handleUserSelect = (user) => {
-    setSelectedUser(user); // Save the selected user in your state
-    navigation.navigate('ChatScreen', { userId: user.id }); // Navigate to the chat screen
+  const handleClick = (item) => {
+    setUserProfile(item);
+    navigation.navigate("UserProfile");
   };
   
   const renderProfile = ({ item }) => (
-    <TouchableOpacity style={styles.profileCard} onPress={() => handleUserSelect(item)}>
+    <TouchableOpacity style={styles.profileCard} onPress={() => handleClick(item)}>
       <Image source={item.imageUrl} style={styles.profileImage} />
       <View style={styles.profileContainer}>
         <Text style={styles.profileName}>{item.name}, {item.age}</Text>

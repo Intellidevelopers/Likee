@@ -8,10 +8,10 @@ const ChatHeader = ({ navigation, selectedUser }) => {
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
-      <Image source={selectedUser?.imageUrl } style={styles.headerProfileImage} />
+      <Image source={require('../assets/dates/8.jpg')} style={styles.headerProfileImage} />
       <View style={styles.headerDetails}>
-        <Text style={styles.headerName}>{selectedUser?.name}</Text>
-        {/* <Text style={styles.headerStatus}>{selectedUser?.status}</Text> */}
+        <Text style={styles.headerName}>Adenike Taiwo</Text>
+        <Text style={styles.headerStatus}>Online</Text>
       </View>
       <TouchableOpacity style={styles.headerIcon}>
         <Entypo name="dots-three-horizontal" size={24} color="#000" />

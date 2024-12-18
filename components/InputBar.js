@@ -6,9 +6,6 @@ const InputBar = ({
   message,
   onChangeMessage,
   onSendMessage,
-  isRecording,
-  onMicPress,
-  soundWaveAnimation,
 }) => (
   <View style={styles.inputContainer}>
     <TextInput
@@ -27,7 +24,7 @@ const InputBar = ({
         <Animated.View
           style={[
             styles.micButton,
-            { transform: [{ scale: isRecording ? soundWaveAnimation : 1 }] },
+            
           ]}
         >
           

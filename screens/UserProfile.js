@@ -16,10 +16,6 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
     navigation.navigate('ChatScreen', { user, imageUrl: user.imgPath }); // Pass imgPath as imageUrl
   };
   
-  const handleUserSelect = (user) => {
-    setSelectedUser(user); // Save the selected user in your state
-    navigation.navigate('ChatScreen', { userId: user.id }); // Navigate to the chat screen
-  };
 
   if (!userProfile) {
     return (
@@ -40,7 +36,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
       {/* Profile Image */}
       <View>
         <Image source={userProfile.imageUrl} style={styles.profileImage} />
@@ -64,7 +60,6 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
             >
               <Ionicons name="chatbox-ellipses-outline" size={24} color={colors.white} />
             </TouchableOpacity>
-
           </View>
 
           {/* Hobbies */}
@@ -353,7 +348,7 @@ const styles = StyleSheet.create({
     marginBottom: hp(1)
   },
   msgBtn:{
-    backgroundColor: colors.primary,
+    backgroundColor: '#22426A',
     borderRadius: 30,
     color: '#fff',
     padding: 10

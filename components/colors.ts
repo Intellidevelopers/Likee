@@ -1,7 +1,7 @@
 // src/styles/colors.ts
 
 const colors = {
-    primary: '#E94057', // Primary brand color
+    primary: '#22426A', // Primary brand color
     white: '#FFFFFF', // White
     secondary: '#555', // Secondary brand color
     background: '#fff', // App background color

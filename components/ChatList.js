@@ -4,7 +4,6 @@ import { Image } from 'expo-image'; // Import from expo-image
 
 const ChatList = ({
   messages,
-  animatedValues,
   onGestureEvent,
   onHandlerStateChange,
   renderMessage,
