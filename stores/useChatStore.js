@@ -45,7 +45,6 @@ const useChatStore = create((set, get) => ({
 
   setSelectedMessage: (message) => set({ selectedMessage: message }),
   setSelectedUser: (user) => set({ selectedUser: user }),
-
   addMessage: (newMessage) => {
     const existingUserMessage = get().messages.find(msg => msg.name === newMessage.name);
 
