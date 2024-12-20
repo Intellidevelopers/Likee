@@ -71,7 +71,6 @@ const useChatStore = create((set, get) => ({
         userMessagesMap[message.name] = message;
       }
     });
-
     // Sort messages by timestamp (descending)
     return Object.values(userMessagesMap).sort((a, b) => b.timestamp - a.timestamp);
   },
