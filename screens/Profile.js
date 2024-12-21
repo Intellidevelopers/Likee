@@ -7,7 +7,7 @@ import Svg, { Circle } from 'react-native-svg';
 
 const { width } = Dimensions.get('window');
 
-const PROFILE_SIZE = 120; // Diameter of the profile picture
+const PROFILE_SIZE = 100; // Diameter of the profile picture
 const STROKE_WIDTH = 10; // Width of the progress bar stroke
 const RADIUS = (PROFILE_SIZE - STROKE_WIDTH) / 2; // Radius for the circle
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS; // Circumference of the progress bar
@@ -62,6 +62,7 @@ const Profile = ({ navigation, progress = 100 }) => {
           source={require('../assets/images/user2.png')} // Replace with actual image URL
           style={styles.profileImage}
         />
+
         {/* Progress Percentage */}
         <View style={styles.tag}>
           <Text style={styles.progressText}>{progress}%</Text>
@@ -78,6 +79,7 @@ const Profile = ({ navigation, progress = 100 }) => {
         </View>
       </View>
     </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false} // Hides the scroll bar for a cleaner UI
       >
@@ -306,8 +308,10 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   profileSection: {
-    alignItems: 'center',
     marginBottom: 20,
+    flexDirection: 'row',
+    padding: 10,
+    gap: 15
   },
   progressContainer: {
     position: 'relative',
@@ -338,7 +342,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   userInfo: {
-    alignItems: 'center',
   },
   userName: {
     fontSize: 20,
