@@ -4,13 +4,14 @@ import userProfileStore from '../stores/userProfileStore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { CameraIcon } from "react-native-heroicons/outline";
 import colors from "../components/colors";
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
 
 export default function UserProfile({ navigation }) { // Ensure navigation prop is received
   const { userProfile } = userProfileStore(); // Access user profile from Zustand store
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
+  const [message, setMessage] = useState("");
   
   const handleNavigateToChat = (user) => {
     navigation.navigate('ChatScreen', { user, imageUrl: user.imgPath }); // Pass imgPath as imageUrl
@@ -36,7 +37,8 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
   };
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
+<GestureHandlerRootView>
+<ScrollView style={styles.container} showsVerticalScrollIndicator={false} contentContainerStyle={styles.contentContainer}>
       {/* Profile Image */}
       <View>
         <Image source={userProfile.imageUrl} style={styles.profileImage} />
@@ -72,9 +74,66 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
           </View>
 
           {/* Bio */}
-          <View>
+          <View style={styles.section}>
             <Text style={styles.bioHeader}>BIO</Text>
             <Text style={styles.bioText}>{userProfile.bio}</Text>
+          </View>
+
+          <View style={styles.infoContainer2}>
+          <Text style={styles.bioHeader}>More about me</Text>
+            <View style={styles.infoContainerRow}>
+              <View style={styles.info}>
+                <MaterialCommunityIcons name="baby-face" size={18}/>
+                <Text style={styles.infoText}>{userProfile.kids}</Text>
+              </View>
+
+              <View style={styles.info}>
+                <MaterialCommunityIcons name="cigar" size={18}/>
+                <Text style={styles.infoText}>{userProfile.smoking}</Text>
+              </View>
+
+              <View style={styles.info}>
+                <MaterialCommunityIcons name="glass-wine" size={18}/>
+                <Text style={styles.infoText}>{userProfile.drinking}</Text>
+              </View>
+
+              <View style={styles.info}>
+                <FontAwesome name="graduation-cap" size={18}/>
+                <Text style={styles.infoText}>{userProfile.education}</Text>
+              </View>
+
+              <View style={styles.info}>
+                <MaterialCommunityIcons name="hand-clap" size={18}/>
+                <Text style={styles.infoText}>{userProfile.religion}</Text>
+              </View>
+            </View>
+
+            <Text style={styles.bioHeader}>My relationship basics</Text>
+            <View style={styles.infoContainerRow}>
+              <View style={styles.info}>
+                <AntDesign name="heart"/>
+                <Text style={styles.infoText}>{userProfile.personality}</Text>
+              </View>
+
+              <View style={styles.info}>
+                <MaterialCommunityIcons name="gender-male-female" size={18}/>
+                <Text style={styles.infoText}>{userProfile.sexuality}</Text>
+              </View>
+
+              <View style={styles.info}>
+                <AntDesign name="heart"/>
+                <Text style={styles.infoText}>{userProfile.education}</Text>
+              </View>
+            </View>
+
+            <Text style={styles.bioHeader}>Language i know</Text>
+            <View style={styles.infoContainerRow}>
+            {userProfile.language?.map((language, index) => (
+              <View key={index} style={styles.info}>
+                <Text style={styles.infoText}>{language}</Text>
+              </View>
+            ))}
+          </View>
           </View>
         </View>
 
@@ -89,30 +148,19 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
 
         {/* Info Container */}
         <View style={styles.infoContainer}>
-          <View style={styles.infoContainerRow}>
             <View>
-              <Text style={styles.bioHeader}>Location</Text>
-              <Text style={styles.infoText}>{userProfile.location}</Text>
+              <Text style={styles.bioHeader}>Star sign</Text>
+              <Text style={styles.label}>{userProfile.starSign}</Text>
             </View>
 
             <View>
               <Text style={styles.bioHeader}>Education</Text>
-              <Text style={styles.infoText}>{userProfile.education}</Text>
+              <Text style={styles.label}>{userProfile.education}</Text>
             </View>
-          </View>
-
-          <Text style={styles.bioHeader}>Interests</Text>
-          <View style={styles.interestsContainer}>
-            {userProfile.interests?.map((interest, index) => (
-              <View key={index} style={styles.interestChip}>
-                <Text style={styles.interestText}>{interest}</Text>
-              </View>
-            ))}
-          </View>
 
           <View>
-            <Text style={styles.bioHeader}>Work Experience</Text>
-            <Text style={styles.infoText}>{userProfile.workExperience}</Text>
+            <Text style={styles.bioHeader}>Location</Text>
+            <Text style={styles.label}>{userProfile.location}</Text>
           </View>
 
           {/* Social Media */}
@@ -129,6 +177,16 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
             ))}
           </View>
         </View>
+        
+        <View style={styles.verifyContainer}>
+          <View style={styles.profileBadegContainer}>
+            <Image source={userProfile.imageUrl} style={styles.userPic}/>
+            <View style={styles.badge}>
+              <MaterialIcons name="verified" color={colors.Badge} size={20}/>
+            </View>
+          </View>
+          <Text style={styles.nameVerifiedText}>{userProfile.name} photo is verified</Text>
+        </View>
       </View>
 
       {/* Image Preview Modal */}
@@ -141,6 +199,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
         </View>
       </Modal>
     </ScrollView>
+</GestureHandlerRootView>
   );
 }
 
@@ -177,7 +236,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   bioContainer: {
-    padding: wp(4),
+    padding: wp(2),
     marginTop: hp(2),
   },
   nameAgeContainer: {
@@ -196,26 +255,27 @@ const styles = StyleSheet.create({
     marginTop: hp(1),
   },
   hobbyChip: {
-    backgroundColor: colors.pinkLabel,
+    backgroundColor: colors.label,
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
     marginRight: 5,
-    marginBottom: 10,
+    marginBottom: 20,
   },
   hobbyText: {
-    color: colors.pink,
+    color: colors.primary,
+    fontWeight: '500'
   },
   bioHeader: {
-    fontSize: hp(2),
-    fontWeight: '900',
-    color: '#000',
-    textTransform: 'uppercase',
+    fontSize: hp(1.8),
+    fontWeight: '600',
+    color: '#777',
     marginBottom: 4,
   },
   bioText: {
-    fontSize: hp(1.8),
-    color: '#444',
+    fontSize: hp(2.1),
+    color: '#000',
+    fontWeight: '700'
   },
   detailsContainer: {
     backgroundColor: 'white',
@@ -274,7 +334,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   infoContainer: {
-    padding: wp(5),
+    padding: wp(3),
+    borderRadius: 20,
+    marginVertical: hp(2),
+  },
+  infoContainer2:{
     borderRadius: 20,
     marginVertical: hp(2),
   },
@@ -284,15 +348,15 @@ const styles = StyleSheet.create({
 
   // General text style for info content
   infoText: {
-    fontSize: hp(1.8),
-    color: '#555',
+    fontSize: hp(2),
+    color: '#000',
     lineHeight: hp(2.5),
-    marginBottom: hp(1),
+    fontWeight: '700'
   },
 
   // Section title style for larger titles (like "Interests")
   sectionTitle: {
-    fontSize: hp(3),
+    fontSize: hp(2),
     fontWeight: '700',
     color: colors.black,
     marginTop: hp(3),
@@ -344,13 +408,76 @@ const styles = StyleSheet.create({
   },
   infoContainerRow:{
     flexDirection: 'row',
-    justifyContent:'space-between',
-    marginBottom: hp(1)
+    marginBottom: hp(3),
+    flexWrap: 'wrap',
+    gap: 10
   },
   msgBtn:{
     backgroundColor: '#22426A',
     borderRadius: 30,
     color: '#fff',
     padding: 10
+  },
+  section:{
+    marginBottom: 20
+  },
+  info:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    backgroundColor: colors.label,
+    paddingHorizontal: 10,
+    padding: 5,
+    borderRadius: 15,
+    marginBottom: 1
+  },
+  label:{
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 20
+  },
+  buttonsContainer:{
+    flexDirection: 'row',
+    justifyContent:'space-evenly',
+    paddingHorizontal: wp(3),
+    alignItems: 'center'
+  },
+  button:{
+    backgroundColor: colors.label,
+    padding: 10,
+    borderRadius: 30
+  },
+  userPic:{
+    width: 45,
+    height: 45,
+    borderRadius: 100,
+    marginRight: 10
+  },
+  verifyContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingHorizontal: wp(3),
+    marginTop: 40
+  },
+  nameVerifiedText:{
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    marginLeft: 5
+  },
+  profileBadegContainer:{
+    flexDirection: 'row',
+    justifyContent:'space-between',
+    alignItems: 'center',
+  },
+  badge:{
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: -20,
+    marginTop: 20
   }
 });
