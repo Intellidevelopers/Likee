@@ -9,7 +9,7 @@ const colors = {
     accent: '#f1c40f', // Accent color
     error: '#e74c3c', // Error color
     success: '#2ecc71', // Success color
-    border: '#E94057', // Border color
+    border: '#22426A', // Border color
     input: '#EDF1F7', // Input color
     greyBackground: '#F6F9FF', // Background color
     button: '#EDF1F7', // Button color

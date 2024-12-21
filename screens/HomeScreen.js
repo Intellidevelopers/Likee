@@ -180,7 +180,7 @@ const HomeScreen = () => {
             <Text style={styles.drawerItem}>Rosko & Gay</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
-            <MaterialCommunityIcons name='lock' color={"red"} size={30}/>
+            <MaterialCommunityIcons name='lock' color={colors.primary} size={30}/>
             <Text style={styles.signoutText}>Sign Out</Text>
           </TouchableOpacity>
         </View>
@@ -416,7 +416,7 @@ const styles = StyleSheet.create({
   },
   signoutText:{
     fontSize: 16,
-    color:'red',
+    color: colors.primary,
     fontWeight: '500'
   },
 });

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, View, Image, Dimensions, FlatList, TouchableOpacity } from 'react-native';
+import colors from '../components/colors';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -72,9 +73,7 @@ const OnboardingScreen = ({ navigation }) => {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GetStarted')}>
         <Text style={styles.buttonText}>Get Started</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.footerText} onPress={() => navigation.navigate('Login')}>
-        Already have an account? <Text style={styles.signInText}>Sign In</Text>
-      </TouchableOpacity>
+      
     </View>
   );
 };
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF4C61',
+    color: colors.primary,
     textAlign: 'center',
     marginBottom: 10,
   },
@@ -122,28 +121,22 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#FF4C61',
+    backgroundColor: colors.primary,
     marginHorizontal: 5,
   },
   button: {
-    backgroundColor: '#FF4C61',
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 30,
     marginBottom: 20,
+    width: '95%',
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  footerText: {
-    color: '#707070',
-    fontSize: 14,
-    marginBottom: 20
-  },
-  signInText: {
-    color: '#FF4C61',
-    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

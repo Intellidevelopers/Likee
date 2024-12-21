@@ -86,8 +86,9 @@ const Login = ({ navigation }) => {
         <Text style={styles.continueButtonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.footerText} onPress={() => navigation.navigate('GetStarted')}>
-              Already have an account? <Text style={styles.signInText}>Sign Up</Text>
-            </TouchableOpacity>
+        <Text>Already have an account?</Text>
+        <Text style={styles.signInText}>Sign Up</Text>
+      </TouchableOpacity>
       </View>
       <StatusBar backgroundColor={colors.greyBackground}/>
       <View style={styles.inssuredPolicy}>
@@ -171,10 +172,13 @@ const styles = StyleSheet.create({
     color: '#707070',
     fontSize: 14,
     marginBottom: 20,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10
   },
   signInText: {
-    color: '#FF4C61',
+    color: colors.primary,
     fontWeight: 'bold',
     textAlign: 'center'
   },

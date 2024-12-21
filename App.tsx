@@ -43,9 +43,9 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }}/>
       <Stack.Screen name="Main" component={BottomTabs} options={{ headerShown: false }}/>
       <Stack.Screen name="IdealMatch" component={IdealMatch} options={{ headerShown: false }}/>
-        <Stack.Screen name="Welcome" component={WelcomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
         <Stack.Screen name="SelectInterest" component={SelectInterest} options={{ headerShown: false }}/>

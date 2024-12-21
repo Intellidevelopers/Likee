@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   activeOption: {
-    backgroundColor: '#ffe6eb',
-    borderColor: '#E03368',
+    backgroundColor: '#E3F0FF',
+    borderColor: colors.border,
     borderWidth: 1,
   },
   optionText: {
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   activeText: {
-    color: '#E03368',
+    color: colors.primary,
     fontWeight: '700',
   },
   icon: {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   continueButton: {
-    backgroundColor: '#E03368',
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '500',
   },
   loaderOverlay: {
     position: 'absolute',

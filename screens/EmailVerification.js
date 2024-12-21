@@ -109,8 +109,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   input: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     borderRadius: 10,
     textAlign: 'center',
     fontSize: 24,
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   continueButton: {
-    backgroundColor: '#E03368',
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '500',
   },
   header: {
     marginTop: 40,

@@ -107,10 +107,9 @@ const styles = StyleSheet.create({
     padding: 10
   },
   input:{
-    padding: 10,
+    padding: 12,
     flex: 1,
-    fontWeight: "600",
-    fontSize: 16
+    fontSize: 14
   },
   icon:{
     width: 30,

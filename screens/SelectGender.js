@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   continueButton: {
-    backgroundColor: '#E03368',
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -122,7 +122,6 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '500',
   },
   optionContainer: {
     flexDirection: 'column',
@@ -139,8 +138,8 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     width: 150,
     paddingVertical: 40,
-    borderColor: '#E03368',
-    backgroundColor: '#f5f5f5',
+    borderColor: colors.border,
+    backgroundColor: '#f8f8f8',
   },
   option: {
     borderWidth: 2,
@@ -154,8 +153,8 @@ const styles = StyleSheet.create({
     borderColor: '#f2f2f2',
   },
   activeText: {
-    color: '#E03368', // Active text color
-    fontWeight: 'bold',
+    color: colors.primary, // Active text color
+    fontWeight: '500',
   },
   optionText: {
     color: '#000', // Default text color

@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 5,
     right: 10,
-    backgroundColor: '#E03368',
+    backgroundColor: colors.primary,
     borderRadius: 20,
     padding: 10,
   },
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   continueButton: {
-    backgroundColor: '#E03368',
+    backgroundColor: colors.primary,
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
   continueButtonText: {
     color: '#FFF',
     fontSize: 16,
-    fontWeight: '500',
   },
   contentContainer:{
     backgroundColor: '#fff',

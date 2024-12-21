@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginBottom: 20,
-    marginTop: 40
+    marginTop: 100
   },
   title: {
     fontSize: 26,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   phoneButtonText: {
     color: colors.primary,
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '500',
   },
   dividerText: {
     fontSize: 16,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     color: '#000',
     textAlign: 'center',
     marginBottom: 10,
-    marginTop: 70,
+    marginTop: 'auto',
   },
   linkText: {
     color: colors.primary,
