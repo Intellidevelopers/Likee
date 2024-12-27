@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginVertical: 20,
+    marginTop: 'auto',
+    marginBottom: 20
   },
   continueButtonText: {
     color: '#FFF',

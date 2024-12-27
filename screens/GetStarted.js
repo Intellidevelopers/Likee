@@ -8,7 +8,7 @@ const GetStarted = ({ navigation }) => {
     <View style={styles.container}>
       {/* Logo */}
       <Image
-        source={require('../assets/icons/logo.png')}
+        source={require('../assets/logo/logo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 120,
+    height: 120,
     marginBottom: 20,
     marginTop: 100
   },

@@ -14,7 +14,7 @@ const WelcomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/icons/logo.png')} style={styles.logo} />
+      <Image source={require('../assets/logo/logo.png')} style={styles.logo} />
     </View>
   );
 };
@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 200,
-    height: 200,
+    width: 220,
+    height: 220,
     resizeMode: 'contain',
     marginBottom: 20,
   },

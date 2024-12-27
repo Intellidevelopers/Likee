@@ -23,7 +23,9 @@ const Chats = ({ navigation }) => {
       <View style={styles.HeaderRow}>
         <Text style={styles.header}>Chats</Text>
         <View style={styles.miniContainer}>
-          <SimpleLineIcons name="speedometer" size={24} color="black" />
+          <TouchableOpacity onPress={() => navigation.navigate('Activities')}>
+            <SimpleLineIcons name="speedometer" size={24} color="black" />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
             <Octicons name="bell-fill" size={24} color="black" />
           </TouchableOpacity>

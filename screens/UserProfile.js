@@ -6,12 +6,21 @@ import { CameraIcon } from "react-native-heroicons/outline";
 import colors from "../components/colors";
 import { AntDesign, Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
+import Toast from "react-native-toast-message";
 
 export default function UserProfile({ navigation }) { // Ensure navigation prop is received
   const { userProfile } = userProfileStore(); // Access user profile from Zustand store
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [message, setMessage] = useState("");
+
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false); // State for dropdown visibility
+
+  const toggleDropdown = () => setIsDropdownVisible(!isDropdownVisible); // Toggle dropdown visibility
+  const handleOptionSelect = (option) => {
+    setIsDropdownVisible(false); // Close the dropdown
+    Toast.show({ type: 'info', text1: `${option} selected!` });
+  };
   
   const handleNavigateToChat = (user) => {
     navigation.navigate('ChatScreen', { user, imageUrl: user.imgPath }); // Pass imgPath as imageUrl
@@ -25,6 +34,17 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
       </View>
     );
   }
+
+  const handleLike = () => {
+    // Assuming we send a like to the backend or update the Zustand store here.
+    // Display a success toast
+    Toast.show({
+      type: 'success',
+      text1: 'You liked this profile!',
+      text2: `${userProfile.name} has been notified of your like.`,
+    });
+  };
+
 
   const openImageModal = (image) => {
     setSelectedImage(image);
@@ -44,10 +64,25 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
         <Image source={userProfile.imageUrl} style={styles.profileImage} />
       </View>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.cameraButton}>
-          <CameraIcon size={hp(3.5)} color="white" strokeWidth={1.5} />
+        <TouchableOpacity style={styles.cameraButton} onPress={toggleDropdown}>
+          <Feather name="more-vertical" size={22} color={colors.white}/>
         </TouchableOpacity>
       </View>
+
+       {/* Dropdown Menu */}
+       {isDropdownVisible && (
+        <View style={styles.dropdown}>
+          <TouchableOpacity style={styles.dropdownItem} onPress={() => handleOptionSelect("Block User")}>
+            <Text style={styles.dropdownText}>Block User</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.dropdownItem} onPress={() => handleOptionSelect("Report User")}>
+            <Text style={styles.dropdownText}>Report User</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.dropdownItem} onPress={() => handleOptionSelect("Bookmark")}>
+            <Text style={styles.dropdownText}>Bookmark</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       {/* Details Container */}
       <View style={styles.detailsContainer}>
@@ -58,9 +93,9 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
             </Text>
             <TouchableOpacity
               style={styles.msgBtn}
-              onPress={() => handleNavigateToChat(userProfile)} // Pass `userProfile` to the navigation function
+              onPress={handleLike} // Pass `userProfile` to the navigation function
             >
-              <Ionicons name="chatbox-ellipses-outline" size={24} color={colors.white} />
+              <Ionicons name="heart" size={24} color={colors.white} />
             </TouchableOpacity>
           </View>
 
@@ -199,6 +234,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
         </View>
       </Modal>
     </ScrollView>
+    <Toast />
 </GestureHandlerRootView>
   );
 }
@@ -479,5 +515,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: -20,
     marginTop: 20
-  }
+  },
+  dropdown: {
+    position: 'absolute',
+    right: 20,
+    top: 60,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1000,
+  },
+  dropdownItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#333',
+  },
 });

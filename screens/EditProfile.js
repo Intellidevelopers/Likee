@@ -7,12 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
+  TextInput,
 } from 'react-native';
-import { AntDesign, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
+import { BottomSheet } from '@rneui/themed';
 import colors from '../components/colors';
 import MoreAboutYouScreen from '../components/About';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import InterestTags from '../components/InterestTags';
 import SocialSection from '../components/SocialSection';
 import VerificationSection from '../components/VerificationSection';
@@ -23,6 +24,11 @@ const EditProfile = ({ navigation }) => {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const [mainImage, setMainImage] = useState(null);
   const [additionalImages, setAdditionalImages] = useState([null, null, null]);
+
+  // States for bottom sheet
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
+  const [selectedInfo, setSelectedInfo] = useState(null);
+  const [tempValue, setTempValue] = useState('');
 
   useEffect(() => {
     Animated.timing(progressAnim, {
@@ -36,6 +42,32 @@ const EditProfile = ({ navigation }) => {
     inputRange: [0, 100],
     outputRange: ['0%', '100%'],
   });
+
+  // Info data
+  const [infoData, setInfoData] = useState([
+    { label: 'Adebayo Abefe, 29', detail: 'Male, Ilorin', editable: false },
+    { label: 'Work', detail: 'STE CYBERTECH LTD, Software Developer', editable: true },
+    { label: 'Education', detail: 'Federal university of technology Akure', editable: true },
+    { label: "Why you're here", detail: 'Ready for a relationship', editable: true },
+  ]);
+  
+
+  // Function to open the bottom sheet
+  const openBottomSheet = (item) => {
+    setSelectedInfo(item);
+    setTempValue(item.detail);
+    setIsBottomSheetVisible(true);
+  };
+
+  // Function to save changes from the bottom sheet
+  const saveValue = () => {
+    setInfoData((prevData) =>
+      prevData.map((el) =>
+        el.label === selectedInfo.label ? { ...el, detail: tempValue } : el
+      )
+    );
+    setIsBottomSheetVisible(false);
+  };
 
   // Function to pick a single image for the main placeholder
   const pickMainImage = async () => {
@@ -78,8 +110,8 @@ const EditProfile = ({ navigation }) => {
             <Animated.View style={[styles.progressBar, { width: progressWidth }]} />
           </View>
         </View>
-        <TouchableOpacity>
-          <Text style={{fontSize: 16, fontWeight: '500'}}>Save</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={{ fontSize: 16, fontWeight: '500' }}>Save</Text>
         </TouchableOpacity>
       </View>
 
@@ -121,19 +153,19 @@ const EditProfile = ({ navigation }) => {
 
         {/* Profile Information Section */}
         <View style={styles.infoSection}>
-          {[
-            { label: 'Adebayo Abefe, 29', detail: 'Male, Ilorin' },
-            { label: 'Work', detail: 'STE CYBERTECH LTD, Software Developer' },
-            { label: 'Education', detail: 'Federal university of technology Akure' },
-            { label: "Why you're here", detail: 'Ready for a relationship' },
-          ].map((item, index) => (
-            <View key={index} style={styles.infoItem}>
-              <View>
-                <Text style={styles.infoLabel}>{item.label}</Text>
-                <Text style={styles.infoDetail}>{item.detail}</Text>
-              </View>
+        {infoData.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.infoItem}
+            onPress={() => item.editable && openBottomSheet(item)} // Check if editable
+          >
+            <View>
+              <Text style={styles.infoLabel}>{item.label}</Text>
+              <Text style={styles.infoDetail}>{item.detail}</Text>
             </View>
-          ))}
+            {item.editable && <Ionicons name="chevron-forward" size={20} color="black" />}
+          </TouchableOpacity>
+        ))}
         </View>
 
         <MoreAboutYouScreen />
@@ -141,9 +173,36 @@ const EditProfile = ({ navigation }) => {
         <VerificationSection />
         <NumberSection />
       </ScrollView>
+
+      {/* Bottom Sheet for Editing */}
+      <BottomSheet
+        isVisible={isBottomSheetVisible}
+        onBackdropPress={() => setIsBottomSheetVisible(false)}
+      >
+        <View style={styles.bottomSheetContent}>
+          <Text style={styles.modalTitle}>Edit {selectedInfo?.label}</Text>
+          <TextInput
+            style={styles.input}
+            value={tempValue}
+            onChangeText={setTempValue}
+            placeholder={`Enter ${selectedInfo?.label}`}
+          />
+          <TouchableOpacity style={styles.saveButton} onPress={saveValue}>
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setIsBottomSheetVisible(false)}
+            style={styles.cancelButton}
+          >
+            <Text style={styles.cancelText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </BottomSheet>
     </GestureHandlerRootView>
   );
 };
+
+
 
 export default EditProfile;
 
@@ -258,4 +317,44 @@ const styles = StyleSheet.create({
     backgroundColor: '#4caf50',
     borderRadius: 2,
   },
+  bottomSheetContent: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderTopEndRadius: 20,
+    borderTopStartRadius: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  saveButton: {
+    backgroundColor: '#000',
+    padding: 15,
+    borderRadius: 30,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  cancelText: {
+    fontSize: 16,
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  bioTouchable:{
+    flexDirection: 'row'
+  }
 });

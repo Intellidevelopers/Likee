@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { datesData } from '../components/datesData';
 import { profile } from "../assets/images";
 import colors from '../components/colors';
+import Toast from "react-native-toast-message";
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,8 +16,8 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const scrollX = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
-  const drawerAnim = useRef(new Animated.Value(-width)).current; // Drawer starts offscreen
-  const overlayAnim = useRef(new Animated.Value(0)).current; // Overlay starts invisible
+  const drawerAnim = useRef(new Animated.Value(-width)).current;
+  const overlayAnim = useRef(new Animated.Value(0)).current;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const combinedData = [...datesData, ...datesData]; // Duplicate data for seamless scrolling
 
@@ -28,17 +29,24 @@ const HomeScreen = () => {
   const handleLike = (index) => {
     console.log(`Liked item at index: ${index}`);
 
+    // Immediately scroll to the next card
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollTo({
         x: (index + 1) * width,
         animated: true,
       });
     }
+
+    // Show toast message after initiating the scroll
+    Toast.show({
+      type: 'success',
+      text1: 'Liked!',
+      text2: `You liked ${combinedData[index].name}'s profile.`,
+    });
   };
 
   const toggleDrawer = () => {
     if (drawerOpen) {
-      // Close the drawer
       Animated.timing(drawerAnim, {
         toValue: -width,
         duration: 300,
@@ -50,7 +58,6 @@ const HomeScreen = () => {
         useNativeDriver: true,
       }).start();
     } else {
-      // Open the drawer
       Animated.timing(drawerAnim, {
         toValue: 0,
         duration: 300,
@@ -71,8 +78,11 @@ const HomeScreen = () => {
 
   useEffect(() => {
     scrollX.addListener(({ value }) => {
-      if (value >= (datesData.length * width)) {
-        scrollViewRef.current.scrollTo({ x: 0, animated: false });
+      const maxScroll = (datesData.length - 1) * width;
+
+      if (value >= maxScroll) {
+        // Automatically reset scroll position after reaching the last card
+        scrollViewRef.current.scrollTo({ x: 0, animated: true });
       }
     });
 
@@ -109,7 +119,6 @@ const HomeScreen = () => {
         <TouchableWithoutFeedback onPress={() => handleClick(item)}>
           <Image source={item.imageUrl} style={styles.image} resizeMode="cover" />
         </TouchableWithoutFeedback>
-
 
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.8)", "rgba(0,0,0,1)"]}
@@ -148,41 +157,14 @@ const HomeScreen = () => {
           <View style={styles.drawerHeaderContainer}>
             <Text style={styles.drawerHeader}>Sodate.me</Text>
             <TouchableOpacity
-            onPress={toggleDrawer} // Toggle drawer visibility
-            style={{ marginRight: 10 }}
+              onPress={toggleDrawer} // Toggle drawer visibility
+              style={{ marginRight: 10 }}
             >
               <Feather name="x" size={32} color="black" />
             </TouchableOpacity>
           </View>
           <Text style={styles.subText}>Quick navigation to your area of interest, you are one step away...</Text>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TapcoinTab")}>
-            <MaterialCommunityIcons name='gesture-double-tap' size={30}/>
-            <Text style={styles.drawerItem}>Tap Coin</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Wallet")}>
-            <Image source={require('../assets/wallet.png')} style={styles.walletIcon}/>
-            <Text style={styles.drawerItem}>My Wallet</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("UsersList")}>
-            <Image source={require('../assets/love.png')} style={styles.walletIcon}/>
-            <Text style={styles.drawerItem}>Rooms</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
-            <Image source={require('../assets/5.png')} style={styles.drawerIcon}/>
-            <Text style={styles.drawerItem}>Sugar Mummies</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
-            <Image source={require('../assets/26.png')} style={styles.drawerIcon}/>
-            <Text style={styles.drawerItem}>Sugar Daddies</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
-            <Image source={require('../assets/2.png')} style={styles.drawerIcon}/>
-            <Text style={styles.drawerItem}>Rosko & Gay</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
-            <MaterialCommunityIcons name='lock' color={colors.primary} size={30}/>
-            <Text style={styles.signoutText}>Sign Out</Text>
-          </TouchableOpacity>
+          {/* Drawer content */}
         </View>
       </Animated.View>
 
@@ -216,13 +198,22 @@ const HomeScreen = () => {
             { useNativeDriver: true }
           )}
           scrollEventThrottle={16}
+          onScrollEndDrag={() => {
+            // Prevent scroll to the right, if already at the last card
+            const maxScroll = (datesData.length - 1) * width;
+            if (scrollX._value >= maxScroll) {
+              scrollViewRef.current.scrollTo({ x: 0, animated: true });
+            }
+          }}
         >
           {combinedData.map((item, index) => renderCard(item, index))}
         </Animated.ScrollView>
       </View>
+      <Toast />
     </View>
   );
 };
+
 
 export default HomeScreen;
 
