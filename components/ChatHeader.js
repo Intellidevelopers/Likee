@@ -1,20 +1,28 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Ionicons, Entypo } from '@expo/vector-icons';
+import React from 'react'; 
+import { View, Text, Image, TouchableOpacity, StyleSheet, Pressable } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import useChatStore from '../stores/useChatStore'; // Assuming you're using Zustand
 
 const ChatHeader = ({ navigation, selectedUser }) => {
+  const { setSelectedUser } = useChatStore();
+
+  const handleClick = (item) => {
+    setSelectedUser(item); // Ensure the selected user is updated in the store
+    navigation.navigate("UserProfile", { userId: item.id, userName: item.name }); // Pass the user details here
+  };
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#000" />
       </TouchableOpacity>
       <Image source={require('../assets/dates/8.jpg')} style={styles.headerProfileImage} />
-      <View style={styles.headerDetails}>
-        <Text style={styles.headerName}>Adenike Taiwo</Text>
+      <Pressable style={styles.headerDetails} onPress={() => handleClick(selectedUser)}>
+        <Text style={styles.headerName}>{selectedUser.name}</Text>
         <Text style={styles.headerStatus}>Online</Text>
-      </View>
+      </Pressable>
       <TouchableOpacity style={styles.headerIcon}>
-        <Entypo name="dots-three-horizontal" size={24} color="#000" />
+        <Ionicons name="flag-outline" size={24} color="#000" />
       </TouchableOpacity>
     </View>
   );
@@ -31,27 +39,26 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#DDD',
         marginTop: 35
-      },
-      headerProfileImage: {
+    },
+    headerProfileImage: {
         width: 40,
         height: 40,
         borderRadius: 20,
         marginLeft: 10,
-      },
-      headerDetails: {
+    },
+    headerDetails: {
         flex: 1,
         marginLeft: 10,
-      },
-      headerName: {
+    },
+    headerName: {
         fontSize: 18,
         fontWeight: 'bold',
-      },
-      headerStatus: {
+    },
+    headerStatus: {
         fontSize: 14,
         color: '#888',
-      },
-      headerIcon: {
+    },
+    headerIcon: {
         marginLeft: 10,
-      },
-  
+    },
 });

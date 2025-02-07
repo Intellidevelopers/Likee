@@ -1,42 +1,43 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, StyleSheet, Animated } from 'react-native';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { View, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
+import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 
-const InputBar = ({
-  message,
-  onChangeMessage,
-  onSendMessage,
-}) => (
-  <View style={styles.inputContainer}>
-    <TextInput
-      style={styles.textInput}
-      placeholder="Type a message"
-      value={message}
-      onChangeText={onChangeMessage}
-      onSubmitEditing={onSendMessage}
-    />
-    {message ? (
-      <TouchableOpacity style={styles.sendButton} onPress={onSendMessage}>
-        <MaterialIcons name="send" size={24} color="white" />
-      </TouchableOpacity>
-    ) : (
-      <TouchableOpacity>
-        <Animated.View
-          style={[
-            styles.micButton,
-            
-          ]}
-        >
-          
-        </Animated.View>
-      </TouchableOpacity>
-    )}
-  </View>
-);
+const InputBar = ({ message, onChangeMessage, onSendMessage }) => {
+  return (
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 1 : 20} // Adjust offset to prevent hiding
+      style={styles.container}
+    >
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Type a message"
+          value={message}
+          onChangeText={onChangeMessage}
+          onSubmitEditing={onSendMessage}
+        />
+        {message ? (
+          <TouchableOpacity style={styles.sendButton} onPress={onSendMessage}>
+            <MaterialIcons name="send" size={24} color="white" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.micButton}>
+            <AntDesign name="frown" size={24} color="white" />
+          </TouchableOpacity>
+        )}
+      </View>
+    </KeyboardAvoidingView>
+  );
+};
 
 export default React.memo(InputBar);
 
 const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    
+  },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#eee',
+    paddingBottom: 30
   },
   textInput: {
     flex: 1,

@@ -73,7 +73,7 @@ const CustomBottomTabs = () => {
               <Text style={{ color: focused ? '#22426A' : '#888' }}>Likes</Text>
             </View>
           ),
-          tabBarBadge: 3, // Badge number for Likes
+          tabBarBadge: 8, // Badge number for Likes
           tabBarBadgeStyle: styles.tabBadge, // Custom style for badge
         }}
       />
@@ -91,7 +91,7 @@ const CustomBottomTabs = () => {
               <Text style={{ color: focused ? '#22426A' : '#888' }}>Chats</Text>
             </View>
           ),
-          tabBarBadge: 5, // Badge number for Chats
+          tabBarBadge: 3, // Badge number for Chats
           tabBarBadgeStyle: styles.tabBadge, // Custom style for badge
         }}
       />
@@ -121,15 +121,15 @@ const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
     backgroundColor: '#ffffff',
-    height: 60,
-    paddingBottom: 10,
+    height: 75,
+    paddingBottom: 20,
   },
   iconContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   tabBadge: {
-    backgroundColor: 'green', // Badge background color
+    backgroundColor: 'red', // Badge background color
     color: '#fff', // Badge text color
     fontSize: 12, // Badge text size
     fontWeight: 'bold', // Badge text weight

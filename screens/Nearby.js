@@ -127,8 +127,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   profileImage: {
-    width: 100,
-    height: 140,
+    width: 115,
+    height: 170,
     borderRadius: 10,
     resizeMode: 'cover',
     marginBottom: 10,

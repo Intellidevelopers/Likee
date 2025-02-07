@@ -105,17 +105,19 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     marginVertical: 20,
+    gap: 20,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   input: {
-    width: 60,
-    height: 60,
+    width: 72,
+    height: 72,
     borderRadius: 10,
     textAlign: 'center',
-    fontSize: 24,
+    fontSize: 34,
     backgroundColor: colors.input,
-    fontWeight: '700',
+    fontWeight: '900',
     color: colors.primary
   },
   duration: {

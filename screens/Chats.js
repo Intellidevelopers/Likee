@@ -74,7 +74,7 @@ const Chats = ({ navigation }) => {
           >
             <Image source={require('../assets/dates/1.jpg')} style={styles.contactImage} />
             <View style={styles.messageTextContainer}>
-              <Text style={styles.contactName}>Adenike Taiwo</Text>
+              <Text style={styles.contactName}>{message.name}</Text>
               <Text style={styles.contactMessage}>{message.message}</Text>
             </View>
             <Ionicons name="chatbubbles-outline" size={20} color="gray" />

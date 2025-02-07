@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback, Image, TouchableOpacity, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AntDesign, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import userProfileStore from '../stores/userProfileStore';
@@ -20,6 +20,16 @@ const HomeScreen = () => {
   const overlayAnim = useRef(new Animated.Value(0)).current;
   const [drawerOpen, setDrawerOpen] = useState(false);
   const combinedData = [...datesData, ...datesData]; // Duplicate data for seamless scrolling
+  const [showModal, setShowModal] = useState(false);
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const handleContinue = () => {
+    setShowModal(false);
+    navigation.navigate("Verification");
+  }
+
 
   const handleClick = (item) => {
     setUserProfile(item);
@@ -110,6 +120,14 @@ const HomeScreen = () => {
       extrapolate: 'clamp'
     });
 
+    
+      // Show the modal once the component is mounted
+      useEffect(() => {
+        setShowModal(true);
+      }, []);
+    
+
+
     return (
       <Animated.View
         key={index}
@@ -157,14 +175,41 @@ const HomeScreen = () => {
           <View style={styles.drawerHeaderContainer}>
             <Text style={styles.drawerHeader}>Sodate.me</Text>
             <TouchableOpacity
-              onPress={toggleDrawer} // Toggle drawer visibility
-              style={{ marginRight: 10 }}
+            onPress={toggleDrawer} // Toggle drawer visibility
+            style={{ marginRight: 10 }}
             >
               <Feather name="x" size={32} color="black" />
             </TouchableOpacity>
           </View>
           <Text style={styles.subText}>Quick navigation to your area of interest, you are one step away...</Text>
-          {/* Drawer content */}
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TapcoinTab")}>
+            <MaterialCommunityIcons name='gesture-double-tap' size={30}/>
+            <Text style={styles.drawerItem}>Tap Coin</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Wallet")}>
+            <Image source={require('../assets/wallet.png')} style={styles.walletIcon}/>
+            <Text style={styles.drawerItem}>My Wallet</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("UsersList")}>
+            <Image source={require('../assets/love.png')} style={styles.walletIcon}/>
+            <Text style={styles.drawerItem}>Rooms</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
+            <Image source={require('../assets/5.png')} style={styles.drawerIcon}/>
+            <Text style={styles.drawerItem}>Sugar Mummies</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
+            <Image source={require('../assets/26.png')} style={styles.drawerIcon}/>
+            <Text style={styles.drawerItem}>Sugar Daddies</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("ComingSoon")}>
+            <Image source={require('../assets/2.png')} style={styles.drawerIcon}/>
+            <Text style={styles.drawerItem}>Rosko & Gay</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Login")}>
+            <MaterialCommunityIcons name='lock' color={colors.primary} size={30}/>
+            <Text style={styles.signoutText}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
       </Animated.View>
 
@@ -210,6 +255,30 @@ const HomeScreen = () => {
         </Animated.ScrollView>
       </View>
       <Toast />
+      <Modal
+              animationType="fade"
+              transparent={true}
+              visible={showModal}
+              onRequestClose={closeModal}
+            >
+              <View style={styles.modalOverlay}>
+                
+                <View style={styles.modalContent}>
+                <TouchableOpacity style={{alignSelf: 'flex-end'}} onPress={closeModal}>
+                  <Feather name='x' size={24}/>
+                </TouchableOpacity>
+                  <Image source={require('../assets/icons/warning.png')} style={styles.icon}/>
+                  <Text style={styles.modalTitle}>Profile Verification Warning</Text>
+                  <Text style={styles.modalMessage}>
+                    Your profile is not verified yet. Please verify your account to continue.
+                  </Text>
+      
+                  <TouchableOpacity style={styles.modalbutton} onPress={handleContinue}>
+                    <Text style={styles.modalbuttonText}>Verify</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
     </View>
   );
 };
@@ -265,14 +334,15 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: width * 0.9,
-    height: height * 0.80,
+    height: height * 0.75,
     borderRadius: 20,
     overflow: 'hidden',
     marginHorizontal: width * 0.05,
     marginBottom: 20,
     alignSelf: 'center',
     position: 'relative',
-    top: -5,
+    top: -20,
+    flex: 1
   },
   image: {
     width: '100%',
@@ -410,4 +480,56 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontWeight: '500'
   },
+  // modal
+  verificationContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
+    maxWidth: 300,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalMessage: {
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalbutton: {
+    backgroundColor: colors.primary,
+    padding: 10,
+    borderRadius: 5,
+    width: '100%',
+    alignItems: 'center',
+  },
+  modalbuttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+  icon:{
+    width: 60,
+    height: 60,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  }
 });

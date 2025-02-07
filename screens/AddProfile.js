@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, ScrollView, Button, Platform } from 'react-native';
 import { AntDesign, Feather, FontAwesome } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import Toast from 'react-native-toast-message';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import colors from '../components/colors';
 import { StatusBar } from 'expo-status-bar';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddProfile = ({ navigation }) => {
   const [image, setImage] = useState(null);
@@ -61,14 +62,27 @@ const AddProfile = ({ navigation }) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
-    const formattedDate = date.toISOString().split('T')[0];
-    setDob(formattedDate);
-    hideDatePicker();
+  // const handleConfirm = (date) => {
+  //   const formattedDate = date.toISOString().split('T')[0];
+  //   setDob(formattedDate);
+  //   hideDatePicker();
+  // };
+
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const handleConfirm = (event, selectedDate) => {
+    if (selectedDate) {
+      const formattedDate = selectedDate.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+      setDob(formattedDate); // Set the formatted date
+      setDate(selectedDate);
+    }
+    setShow(false);
   };
+  
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
           <AntDesign name='leftcircleo' size={35} color={colors.primary}/>
       </TouchableOpacity>
@@ -119,18 +133,25 @@ const AddProfile = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity style={styles.inputContainer} onPress={showDatePicker}>
+      <TouchableOpacity style={styles.inputContainer} onPress={() => setShow(true)}>
         <TextInput
           style={styles.input}
           placeholder="Date of Birth"
-          value={dob}
-          onChangeText={setDob}
-          editable={false}
+          value={dob} // This ensures the selected date is displayed
+          editable={false} // Prevent manual input
         />
-        <View >
-          <FontAwesome name="calendar" size={20} color="#999" style={styles.calendarIcon} />
-        </View>
+        <FontAwesome name="calendar" size={20} color="#999" style={styles.calendarIcon} />
       </TouchableOpacity>
+
+      {show && (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display={Platform.OS === "ios" ? "spinner" : "default"}
+            onChange={handleConfirm}
+          />
+        )}
+
 
       <View style={styles.inputContainer}>
         <TextInput
@@ -146,17 +167,13 @@ const AddProfile = ({ navigation }) => {
       </TouchableOpacity>
       </ScrollView>
 
-      <DateTimePickerModal
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
+      
+
 
       <Toast />
       <StatusBar backgroundColor={colors.greyBackground}/>
 
-    </View>
+    </ScrollView>
   );
 };
 

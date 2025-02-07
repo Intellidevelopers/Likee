@@ -36,6 +36,9 @@ import Wallet from "./screens/Wallet";
 import GetStarted from "./screens/GetStarted";
 import Match from "./screens/Match";
 import UserListScreen from "./screens/UsersList";
+import Verification from "./screens/Verification";
+import FaceCapturing from "./screens/FaceCapturing";
+import VerificationSuccess from "./screens/VerificationSuccess";
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +76,9 @@ function App() {
         <Stack.Screen name="GetStarted" component={GetStarted} options={{ headerShown: false }}/>
         <Stack.Screen name="Match" component={Match} options={{ headerShown: false }}/>
         <Stack.Screen name="UsersList" component={UserListScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="Verification" component={Verification} options={{ headerShown: false }}/>
+        <Stack.Screen name="FaceCapturing" component={FaceCapturing} options={{ headerShown: false }}/>
+        <Stack.Screen name="VerificationSuccess" component={VerificationSuccess} options={{ headerShown: false }}/>
       </Stack.Navigator>
       <StatusBar backgroundColor='#fff'/>
     </NavigationContainer>

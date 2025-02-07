@@ -504,7 +504,7 @@ const styles = StyleSheet.create({
     fontSize: 13
   },
   content:{
-    paddingBottom: 60
+    paddingBottom: 80
   },
   extraButton:{
     backgroundColor: colors.white,
@@ -591,10 +591,11 @@ const styles = StyleSheet.create({
   },
   tag:{
     backgroundColor: colors.black,
-    width: '35%',
     borderRadius: 30,
     alignSelf: 'center',
-    top: -10
+    top: -10,
+    paddingHorizontal: 8,
+    paddingVertical: 3
   },
   subText:{
     color: "#777",

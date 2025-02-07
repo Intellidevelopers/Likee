@@ -181,6 +181,7 @@ const ChatScreen = ({ navigation }) => {
     onGestureEvent={onGestureEvent}
     onHandlerStateChange={onHandlerStateChange}
     renderMessage={renderMessage}
+    
   />
   <ReplyBar
     selectedMessage={selectedMessage}

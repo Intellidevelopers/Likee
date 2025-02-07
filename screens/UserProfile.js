@@ -372,7 +372,7 @@ const styles = StyleSheet.create({
   infoContainer: {
     padding: wp(3),
     borderRadius: 20,
-    marginVertical: hp(2),
+    marginVertical: hp(1),
   },
   infoContainer2:{
     borderRadius: 20,
@@ -492,9 +492,7 @@ const styles = StyleSheet.create({
   verifyContainer:{
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
     paddingHorizontal: wp(3),
-    marginTop: 40
   },
   nameVerifiedText:{
     fontSize: 16,

@@ -32,7 +32,7 @@ const GetStarted = ({ navigation }) => {
 
       {/* Social Signup Buttons */}
       <View style={styles.socialContainer}>
-        <TouchableOpacity style={styles.socialButton}>
+        <TouchableOpacity style={styles.socialButton} onPress={() => navigation.navigate('Main')}>
           <Image
             source={require('../assets/icons/google.png')}
             style={styles.socialIcon}
@@ -41,7 +41,7 @@ const GetStarted = ({ navigation }) => {
           <Text style={styles.socialButtonText}>Google</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.socialButton}>
+        <TouchableOpacity style={styles.socialButton} onPress={() => navigation.navigate('Main')}>
           <Image
             source={require('../assets/icons/facebook.png')}
             style={styles.socialIcon}
