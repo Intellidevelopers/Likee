@@ -34,8 +34,8 @@ import ComingSoon from './screens/ComingSoon';
 import Settings from './screens/Settings';
 import Wallet from './screens/Wallet';
 import GetStarted from './screens/GetStarted';
+import UserListScreen from './screens/UsersList';ß
 import Match from './screens/Match';
-import UserListScreen from './screens/UsersList';
 import Verification from './screens/Verification';
 import FaceCapturing from './screens/FaceCapturing';
 import VerificationSuccess from './screens/VerificationSuccess';
