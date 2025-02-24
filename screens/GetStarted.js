@@ -18,7 +18,7 @@ const GetStarted = ({ navigation }) => {
       <Text style={styles.subtitle}>Please login to continue</Text>
 
       {/* Continue with Email */}
-      <TouchableOpacity style={styles.emailButton} onPress={() => navigation.navigate('SelectInterest')}>
+      <TouchableOpacity style={styles.emailButton} onPress={() => navigation.navigate('EmailRegistration')}>
         <Text style={styles.emailButtonText}>Continue with Email</Text>
       </TouchableOpacity>
 

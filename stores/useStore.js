@@ -1,9 +1,9 @@
-// useStore.js
+// userProfileStore.js
 import { create } from 'zustand';
 
-const useStore = create((set) => ({
-  userProfile: null,
-  setUserProfile: (profile) => set({ userProfile: profile }),
+const userProfileStore = create((set) => ({
+	userData: {},
+	setUserData: (profile) => set({ userData: profile }),
 }));
 
-export default useStore; // This should correctly export useStore
+export default userProfileStore;

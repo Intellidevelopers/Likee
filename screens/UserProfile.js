@@ -1,15 +1,19 @@
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity, Modal, Pressable, Linking } from "react-native";
 import React, { useState } from "react";
 import userProfileStore from '../stores/userProfileStore';
+import useStore from '../stores/useStore';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { CameraIcon } from "react-native-heroicons/outline";
 import colors from "../components/colors";
 import { AntDesign, Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
+import { getErrorMessage } from "../utils/getErrorMessage";
+import axios from "axios";
 
 export default function UserProfile({ navigation }) { // Ensure navigation prop is received
   const { userProfile } = userProfileStore(); // Access user profile from Zustand store
+  const { userData } = useStore(); // Access user profile from Zustand store
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [message, setMessage] = useState("");
@@ -34,7 +38,30 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
       </View>
     );
   }
-
+	const handleLikeUser = async (targetId) => {
+		try {
+			const { data } = await axios.post(
+				`${process.env.EXPO_PUBLIC_API_URI}/users/${userData._id}/like/${targetId}`,
+				{},
+				{
+					headers: {
+						Authorization: `Bearer ${accessToken}`,
+					},
+				}
+			);
+			if (data) {
+				console.log('liked data ....', data);
+			}
+		} catch (error) {
+			const message = getErrorMessage(error);
+			console.log('Error liking user', message);
+			Toast.show({
+				type: 'error',
+				text1: message,
+				// position: 'bottom',
+			});
+		}
+	};
   const handleLike = () => {
     // Assuming we send a like to the backend or update the Zustand store here.
     // Display a success toast
@@ -43,6 +70,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
       text1: 'You liked this profile!',
       text2: `${userProfile.name} has been notified of your like.`,
     });
+    handleLikeUser(userProfile._id);
   };
 
 
@@ -152,7 +180,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
 
               <View style={styles.info}>
                 <MaterialCommunityIcons name="gender-male-female" size={18}/>
-                <Text style={styles.infoText}>{userProfile.sexuality}</Text>
+                <Text style={styles.infoText}>{userProfile.gender}</Text>
               </View>
 
               <View style={styles.info}>
@@ -163,7 +191,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
 
             <Text style={styles.bioHeader}>Language i know</Text>
             <View style={styles.infoContainerRow}>
-            {userProfile.language?.map((language, index) => (
+            {userProfile.languages?.map((language, index) => (
               <View key={index} style={styles.info}>
                 <Text style={styles.infoText}>{language}</Text>
               </View>
@@ -195,7 +223,7 @@ export default function UserProfile({ navigation }) { // Ensure navigation prop 
 
           <View>
             <Text style={styles.bioHeader}>Location</Text>
-            <Text style={styles.label}>{userProfile.location}</Text>
+            <Text style={styles.label}>{userProfile?.location}</Text>
           </View>
 
           {/* Social Media */}

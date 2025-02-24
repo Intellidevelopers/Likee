@@ -4,86 +4,101 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import Toast from 'react-native-toast-message';
 import colors from '../components/colors';
 
-const SelectGender = ({ navigation }) => {
+const SelectGender = ({ navigation, route }) => {
   const [selectedGender, setSelectedGender] = useState(null); // State to track selected gender
-
+  // get data from route.params
+  const payloads = route.params
   const handleGenderSelect = (gender) => {
     setSelectedGender(gender);
   };
 
   const isContinueDisabled = selectedGender === null; // Check if no gender is selected
+  const handleContinue = () => {
+		if (selectedGender) {
+			Toast.show({
+				type: 'success',
+				text1: 'Gender Selected!',
+				text2: `You selected: ${selectedGender}`,
+			});
+			navigation.navigate('SelectInterest', {...payloads, gender: selectedGender}); // Navigate to the next screen
+		}
+	}
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.header} onPress={() => navigation.goBack()}>
-          <AntDesign name='leftcircleo' size={32} color={colors.primary}/>
-      </TouchableOpacity>
+		<View style={styles.container}>
+			<TouchableOpacity
+				style={styles.header}
+				onPress={() => navigation.goBack()}
+			>
+				<AntDesign name="leftcircleo" size={32} color={colors.primary} />
+			</TouchableOpacity>
 
-      <Text style={styles.title}>Select Gender</Text>
-      <Text style={styles.subtitle}>Please select your gender</Text>
+			<Text style={styles.title}>Select Gender</Text>
+			<Text style={styles.subtitle}>Please select your gender</Text>
 
-      <View style={styles.optionContainer}>
-        {/* Male option */}
-        <TouchableOpacity
-          style={[
-            styles.option,
-            selectedGender === 'male' && styles.activeOption,
-          ]}
-          onPress={() => handleGenderSelect('male')}
-        >
-          <Image source={require('../assets/2.png')} color={selectedGender === 'male' ? '#E03368' : '#000'} style={styles.icon}/>
-          <Text
-            style={
-              selectedGender === 'male' ? styles.activeText : styles.optionText
-            }
-          >
-            Male
-          </Text>
-        </TouchableOpacity>
+			<View style={styles.optionContainer}>
+				{/* Male option */}
+				<TouchableOpacity
+					style={[
+						styles.option,
+						selectedGender === 'Male' && styles.activeOption,
+					]}
+					onPress={() => handleGenderSelect('Male')}
+				>
+					<Image
+						source={require('../assets/2.png')}
+						color={selectedGender === 'Male' ? '#E03368' : '#000'}
+						style={styles.icon}
+					/>
+					<Text
+						style={
+							selectedGender === 'Male' ? styles.activeText : styles.optionText
+						}
+					>
+						Male
+					</Text>
+				</TouchableOpacity>
 
-        {/* Female option */}
-        <TouchableOpacity
-          style={[
-            styles.option,
-            selectedGender === 'female' && styles.activeOption,
-          ]}
-          onPress={() => handleGenderSelect('female')}
-        >
-          <Image source={require('../assets/22.png')} color={selectedGender === 'female' ? '#E03368' : '#000'} style={styles.icon}/>
-          <Text
-            style={
-              selectedGender === 'female' ? styles.activeText : styles.optionText
-            }
-          >
-            Female
-          </Text>
-        </TouchableOpacity>
-      </View>
+				{/* Female option */}
+				<TouchableOpacity
+					style={[
+						styles.option,
+						selectedGender === 'Female' && styles.activeOption,
+					]}
+					onPress={() => handleGenderSelect('Female')}
+				>
+					<Image
+						source={require('../assets/22.png')}
+						color={selectedGender === 'Female' ? '#E03368' : '#000'}
+						style={styles.icon}
+					/>
+					<Text
+						style={
+							selectedGender === 'Female'
+								? styles.activeText
+								: styles.optionText
+						}
+					>
+						Female
+					</Text>
+				</TouchableOpacity>
+			</View>
 
-      {/* Continue Button */}
-      <TouchableOpacity
-        style={[
-          styles.continueButton,
-          isContinueDisabled && styles.disabledButton, // Disable style if no option selected
-        ]}
-        disabled={isContinueDisabled} // Disable button functionality
-        onPress={() => {
-          if (selectedGender) {
-            Toast.show({
-              type: 'success',
-              text1: 'Gender Selected!',
-              text2: `You selected: ${selectedGender}`,
-            });
-            navigation.navigate('IdealMatch'); // Navigate to the next screen
-          }
-        }}
-      >
-        <Text style={styles.continueButtonText}>Continue</Text>
-      </TouchableOpacity>
+			{/* Continue Button */}
+			<TouchableOpacity
+				style={[
+					styles.continueButton,
+					isContinueDisabled && styles.disabledButton, // Disable style if no option selected
+				]}
+				disabled={isContinueDisabled} // Disable button functionality
+				onPress={handleContinue}
+			>
+				<Text style={styles.continueButtonText}>Continue</Text>
+			</TouchableOpacity>
 
-      <Toast />
-    </View>
-  );
+			<Toast />
+		</View>
+	);
 };
 
 const styles = StyleSheet.create({
